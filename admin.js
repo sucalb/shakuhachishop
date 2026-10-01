@@ -123,7 +123,7 @@
     state.dirty = false;
     state.tab = tab;
     tabsEl.querySelectorAll("button").forEach((b) => b.toggleAttribute("aria-current", b.dataset.tab === tab));
-    ({ flutes: renderFluteList, hero: renderHero, collections: renderCollections, reviews: renderReviews, contact: renderContact })[tab]();
+    ({ flutes: renderFluteList, hero: renderHero, collections: renderCollections, reviews: renderReviews, contact: renderContact, account: renderAccount })[tab]();
     window.scrollTo(0, 0);
   }
   tabsEl.addEventListener("click", (e) => {
@@ -544,6 +544,39 @@
     };
   }
 
+  // ---------- Tài khoản ----------
+  function renderAccount() {
+    app.innerHTML = `
+      <div class="page-head"><div>
+        <h1>Đổi mật khẩu</h1>
+        <p class="muted">Mật khẩu mới có hiệu lực sau khoảng 1 phút. Hãy ghi lại cẩn thận: nếu quên, cần nhờ người làm web đặt lại.</p>
+      </div></div>
+      <form class="panel" id="pwForm" style="max-width:460px">
+        <label>Tên đăng nhập<input name="user" required autocomplete="username" autocapitalize="off" spellcheck="false"></label>
+        <label>Mật khẩu hiện tại<input name="old" type="password" required autocomplete="current-password"></label>
+        <label>Mật khẩu mới (ít nhất 10 ký tự)<input name="pw" type="password" minlength="10" required autocomplete="new-password"></label>
+        <label>Nhập lại mật khẩu mới<input name="pw2" type="password" minlength="10" required autocomplete="new-password"></label>
+        <button class="btn primary" type="submit" style="justify-self:start">Đổi mật khẩu</button>
+      </form>`;
+    document.getElementById("pwForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const f = e.target.elements;
+      if (f.pw.value !== f.pw2.value) return toast("Hai lần nhập mật khẩu mới không khớp.", true);
+      if (f.pw.value.length < 10) return toast("Mật khẩu mới cần ít nhất 10 ký tự.", true);
+      const btn = e.target.querySelector("button");
+      btn.disabled = true;
+      btn.textContent = "Đang đổi…";
+      try {
+        await Store.changePassword(f.user.value, f.old.value, f.pw.value);
+        e.target.reset();
+        state.dirty = false;
+        toast("Đã đổi mật khẩu. Lần đăng nhập sau (từ khoảng 1 phút nữa) dùng mật khẩu mới.");
+      } catch (err) { fail(err); }
+      btn.disabled = false;
+      btn.textContent = "Đổi mật khẩu";
+    });
+  }
+
   // ---------- Khởi động ----------
   async function boot() {
     const badge = document.getElementById("modeBadge");
@@ -556,6 +589,7 @@
       if (!session) return renderLogin();
       document.getElementById("signOut").hidden = !Store.live;
       tabsEl.hidden = false;
+      document.getElementById("accountTab").hidden = !Store.live;
       [state.settings, state.flutes] = await Promise.all([Store.settings(), Store.listFlutes()]);
       state.dirty = false;
       showTab(state.tab);

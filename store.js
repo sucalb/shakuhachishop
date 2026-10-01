@@ -216,6 +216,31 @@ const Store = (() => {
     return new TextDecoder().decode(plain);
   }
 
+  // Khách tự đổi mật khẩu: kiểm tra mật khẩu cũ, mã hoá lại token bằng mật khẩu mới,
+  // rồi ghi khối login mới vào config.js. Có hiệu lực sau khi GitHub Pages đăng lại (~1 phút).
+  async function changePassword(user, oldPassword, newPassword) {
+    if (!live || !token()) throw new Error("Cần đăng nhập trước.");
+    let current;
+    try { current = await unlock(user, oldPassword); } catch (e) { current = null; }
+    if (current !== token()) throw new Error("Tên đăng nhập hoặc mật khẩu hiện tại không đúng.");
+    if (newPassword.length < 10) throw new Error("Mật khẩu mới cần ít nhất 10 ký tự.");
+
+    const enc = new TextEncoder();
+    const salt = crypto.getRandomValues(new Uint8Array(16));
+    const iv = crypto.getRandomValues(new Uint8Array(12));
+    const iterations = 310000;
+    const material = await crypto.subtle.importKey("raw", enc.encode(`${user.trim().toLowerCase()}\n${newPassword}`), "PBKDF2", false, ["deriveKey"]);
+    const key = await crypto.subtle.deriveKey({ name: "PBKDF2", salt, iterations, hash: "SHA-256" }, material, { name: "AES-GCM", length: 256 }, false, ["encrypt"]);
+    const data = new Uint8Array(await crypto.subtle.encrypt({ name: "AES-GCM", iv }, key, enc.encode(token())));
+    const block = `  login: {\n    iterations: ${iterations},\n    salt: "${toB64(salt)}",\n    iv: "${toB64(iv)}",\n    data: "${toB64(data)}",\n  },`;
+
+    const f = await api(`contents/config.js?ref=${BRANCH}&t=${Date.now()}`);
+    const text = decodeText(f.content);
+    const next = text.replace(/  login: (?:null,|\{[\s\S]*?\n  \},)/, block);
+    if (next === text) throw new Error("Không tìm thấy phần đăng nhập trong config.js.");
+    await api("contents/config.js", { method: "PUT", body: JSON.stringify({ message: "Đổi mật khẩu quản trị", content: encodeText(next), sha: f.sha, branch: BRANCH }) });
+  }
+
   async function session() {
     if (!live) return { demo: true };
     return token() ? { user: true } : null;
@@ -249,6 +274,6 @@ const Store = (() => {
 
   return {
     live, listFlutes, saveFlute, removeFlute, reorderFlutes,
-    settings, saveSetting, upload, preview, session, signIn, signOut, resetDemo,
+    settings, saveSetting, upload, preview, session, signIn, signOut, changePassword, resetDemo,
   };
 })();

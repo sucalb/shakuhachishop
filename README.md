@@ -48,7 +48,8 @@ Cài lần đầu (hoặc đổi mật khẩu):
 3. Chép đoạn kết quả vào `config.js` (thay `login: null,`), commit và push.
 4. Gửi khách link `https://shakuhachishop.com/admin.html` + tên đăng nhập + mật khẩu.
 
-Đổi mật khẩu: làm lại bước 2–3. Thu hồi quyền ngay lập tức: xoá token trên GitHub.
+Khách tự đổi mật khẩu trong trang quản trị, mục **Tài khoản** (cần mật khẩu hiện tại); trang sẽ ghi khối `login` mới vào `config.js`.
+Khách quên mật khẩu: bạn làm lại bước 1–3 để đặt mật khẩu mới. Thu hồi quyền ngay lập tức: xoá token trên GitHub.
 
 `config.js` công khai nhưng an toàn: token chỉ giải mã được khi biết đúng tên + mật khẩu, và token chỉ có quyền ghi vào đúng repo này.
 Mật khẩu nên dài (≥ 10 ký tự, không phải chữ đơn giản) vì ai cũng tải được `config.js` để thử đoán.
