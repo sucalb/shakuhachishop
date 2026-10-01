@@ -8,10 +8,11 @@ Web bán sáo shakuhachi, giao diện tiếng Anh, không có thanh toán: khác
 | `catalogue.html?c=jiari&l=1.8` | Danh sách sáo, lọc theo danh mục và (với Jiari) theo độ dài |
 | `flute.html?id=...` | Chi tiết một cây sáo: ảnh, video YouTube, nút nhắn tin |
 | `admin.html` | Trang quản trị cho chủ shop (tiếng Việt) |
-| `data.js` | Nội dung mặc định + nhóm độ dài Jiari + bảng cao độ |
-| `config.js` | Khoá kết nối Supabase |
-| `store.js` | Đọc/ghi dữ liệu (Supabase hoặc chế độ demo) |
-| `supabase/schema.sql` | Tạo bảng, phân quyền và kho ảnh trên Supabase |
+| `data.js` | Nội dung mặc định (khi `content.json` chưa có mục đó) + nhóm độ dài Jiari + bảng cao độ |
+| `config.js` | Repo GitHub + tài khoản quản trị (đã mã hoá) |
+| `store.js` | Đọc `content.json`; trang quản trị ghi vào repo qua GitHub API (hoặc chế độ demo) |
+| `content.json` | Sáo + cài đặt trang mà khách sửa trong trang quản trị |
+| `tools/setup-login.html` | Tạo tên + mật khẩu quản trị cho khách |
 
 ## Chạy thử trên máy
 
@@ -31,18 +32,26 @@ Khi `config.js` còn trống, web chạy **chế độ demo**: thay đổi trong
 - **Đánh giá**: tỉ lệ đề xuất, số đánh giá, chép các đánh giá hay từ Facebook.
 - **Liên hệ**: link trang Facebook, Messenger, trang đánh giá.
 
-## Kết nối Supabase (để khách tự đăng)
+## Tài khoản quản trị
 
-1. Tạo project miễn phí tại https://supabase.com, nên dùng email của khách để khách giữ quyền sở hữu.
-2. **SQL Editor** → dán toàn bộ `supabase/schema.sql` → **Run**. Sau đó New query → dán `supabase/seed.sql` → **Run** để nạp các sản phẩm đang có.
-3. **Authentication → Users → Add user**: tạo tài khoản quản trị cho khách (email + mật khẩu).
-4. **Authentication → Sign In / Providers**: tắt **Allow new users to sign up**. Nếu không tắt, người lạ có thể tự đăng ký rồi sửa dữ liệu.
-5. **Project Settings → API**: chép `Project URL` và `anon public key` vào `config.js`.
-6. Mở `admin.html`, đăng nhập. Lần đầu web dùng nội dung mặc định trong `data.js`; bấm **Lưu** ở từng mục để ghi vào Supabase.
+Không dùng dịch vụ ngoài. Nội dung nằm trong `content.json` của repo này, ảnh tải lên nằm trong `uploads/`.
+Trang quản trị đăng nhập bằng tên + mật khẩu; mật khẩu mở khoá một GitHub token đã mã hoá sẵn trong `config.js`,
+rồi ghi thẳng vào repo. Mỗi lần **Lưu** là một commit; GitHub Pages đăng lại web sau khoảng 1 phút.
 
-`anon key` được phép để công khai. Quyền ghi dữ liệu đã giới hạn cho tài khoản đăng nhập bằng Row Level Security trong `schema.sql`.
+Cài lần đầu (hoặc đổi mật khẩu):
 
-Lưu ý: gói miễn phí của Supabase tạm dừng project nếu không có truy cập nào trong 7 ngày; khi đó vào dashboard bấm **Restore**. Web có khách ghé thường xuyên thì không bị.
+1. Tạo token: github.com → Settings → Developer settings → **Fine-grained tokens** → Generate new token.
+   - Repository access: **Only select repositories** → `shakuhachishop`
+   - Permissions → Repository → **Contents: Read and write**
+   - Expiration: 1 năm (ghi lịch để gia hạn; hết hạn thì khách không lưu được, web vẫn chạy bình thường).
+2. Mở `https://shakuhachishop.com/tools/setup-login.html`, nhập tên đăng nhập, mật khẩu (≥ 10 ký tự) cho khách và token.
+3. Chép đoạn kết quả vào `config.js` (thay `login: null,`), commit và push.
+4. Gửi khách link `https://shakuhachishop.com/admin.html` + tên đăng nhập + mật khẩu.
+
+Đổi mật khẩu: làm lại bước 2–3. Thu hồi quyền ngay lập tức: xoá token trên GitHub.
+
+`config.js` công khai nhưng an toàn: token chỉ giải mã được khi biết đúng tên + mật khẩu, và token chỉ có quyền ghi vào đúng repo này.
+Mật khẩu nên dài (≥ 10 ký tự, không phải chữ đơn giản) vì ai cũng tải được `config.js` để thử đoán.
 
 ## Tên miền shakuhachishop.com
 

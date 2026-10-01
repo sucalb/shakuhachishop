@@ -10,7 +10,11 @@
 
   const esc = (s) =>
     String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
-  const safeImg = (u) => (/^(https:\/\/|assets\/|data:image\/(jpeg|png|webp);)/.test(u || "") ? esc(u) : "");
+  const safeImg = (u) => {
+    const src = Store.preview(u || "");
+    return /^(https:\/\/|assets\/|uploads\/|blob:|data:image\/(jpeg|png|webp);)/.test(src) ? esc(src) : "";
+  };
+  const SAVED = Store.live ? "Đã lưu. Web sẽ cập nhật sau khoảng 1 phút." : "Đã lưu";
   const slugify = (s) =>
     String(s || "").normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/đ/gi, "d")
       .toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "").slice(0, 50);
@@ -92,8 +96,8 @@
     app.innerHTML = `
       <form class="login" id="loginForm">
         <h1>Đăng nhập</h1>
-        <p class="muted">Dùng tài khoản quản trị đã được tạo trong Supabase.</p>
-        <label>Email<input type="email" name="email" required autocomplete="username"></label>
+        <p class="muted">Dùng tên đăng nhập và mật khẩu quản trị đã được cấp.</p>
+        <label>Tên đăng nhập<input name="user" required autocomplete="username" autocapitalize="off" spellcheck="false"></label>
         <label>Mật khẩu<input type="password" name="password" required autocomplete="current-password"></label>
         <button class="btn primary" type="submit">Đăng nhập</button>
       </form>`;
@@ -103,10 +107,10 @@
       const btn = e.target.querySelector("button");
       btn.disabled = true;
       try {
-        await Store.signIn(f.get("email"), f.get("password"));
+        await Store.signIn(f.get("user"), f.get("password"));
         await boot();
       } catch (err) {
-        fail(new Error("Sai email hoặc mật khẩu."));
+        fail(err);
       } finally {
         btn.disabled = false;
       }
@@ -205,7 +209,7 @@
         if (btn.dataset.act === "delete") {
           if (!confirm(`Xoá “${f.name}”? Không thể hoàn tác.\n\nNếu sáo đã bán, nên đổi trạng thái thành “Đã bán” thay vì xoá.`)) return;
           await Store.removeFlute(id);
-          toast("Đã xoá");
+          toast(Store.live ? "Đã xoá. Web sẽ cập nhật sau khoảng 1 phút." : "Đã xoá");
           return loadFlutes();
         }
         const to = btn.dataset.act === "up" ? idx - 1 : idx + 1;
@@ -337,7 +341,7 @@
       await Store.saveFlute(flute);
       if (isNew) await Store.reorderFlutes([flute.id, ...state.flutes.map((x) => x.id)]);
       state.dirty = false;
-      toast("Đã lưu");
+      toast(SAVED);
       await loadFlutes();
     } catch (err) {
       fail(err);
@@ -355,7 +359,7 @@
       await Store.saveSetting(key, value);
       state.settings[key] = value;
       state.dirty = false;
-      toast("Đã lưu");
+      toast(SAVED);
     } catch (err) { fail(err); }
     btn.disabled = false;
     btn.textContent = label;
@@ -448,7 +452,7 @@
     app.innerHTML = `
       <div class="page-head"><div>
         <h1>Đánh giá</h1>
-        <p class="muted">Hiện ở cuối trang chủ, kèm nút dẫn sang <a href="${esc(contact.reviews)}" target="_blank" rel="noopener">trang đánh giá trên Facebook</a>. Chép khoảng 6–10 đánh giá hay nhất từ Facebook vào đây; trên web mỗi đánh giá là một thẻ nằm ngang xếp từ trên xuống, đánh giá dài có nút “Read more”.</p>
+        <p class="muted">Hiện ở cuối trang chủ, kèm nút dẫn sang <a href="${esc(contact.reviews)}" target="_blank" rel="noopener">trang đánh giá trên Facebook</a>. Facebook không tự gửi đánh giá sang web: khi page có đánh giá mới, bấm “Thêm đánh giá mới” và dán vào; trên web mỗi đánh giá là một thẻ nằm ngang xếp từ trên xuống, đánh giá dài có nút “Read more”.</p>
       </div></div>
       <section class="panel">
         <h2>Tổng quan (lấy từ tab Đánh giá trên Facebook)</h2>
@@ -459,8 +463,8 @@
       </section>
       <section class="panel">
         <h2>Đánh giá hiển thị trên web</h2>
+        <div><button type="button" class="btn" id="addReview">+ Thêm đánh giá mới (hiện trên cùng)</button></div>
         <div id="reviewList" style="display:grid;gap:14px"></div>
-        <div><button type="button" class="btn" id="addReview">+ Thêm đánh giá</button></div>
       </section>
       ${saveBar("saveReviews")}`;
 
@@ -498,9 +502,9 @@
     });
     document.getElementById("addReview").onclick = () => {
       collect();
-      reviews.push({ name: "", date: "", text: "" });
+      reviews.unshift({ name: "", date: "", text: "" });
       draw();
-      list.querySelector(".review-edit:last-child input").focus();
+      list.querySelector(".review-edit input").focus();
     };
     document.getElementById("saveReviews").onclick = async (e) => {
       collect();
@@ -543,7 +547,7 @@
   // ---------- Khởi động ----------
   async function boot() {
     const badge = document.getElementById("modeBadge");
-    badge.textContent = Store.live ? "Đang kết nối Supabase" : "Chế độ demo";
+    badge.textContent = Store.live ? "Đang hoạt động" : "Chế độ demo";
     badge.classList.toggle("live", Store.live);
     document.getElementById("demoNote").hidden = Store.live;
 

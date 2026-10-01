@@ -1,6 +1,7 @@
-// Kết nối Supabase (xem README.md).
-// Để trống => chế độ demo: dữ liệu lấy từ data.js, thay đổi trong trang quản trị chỉ lưu trên trình duyệt đang dùng.
+// Kết nối trang quản trị với repo GitHub (xem README.md, mục "Tài khoản quản trị").
+// login được tạo bằng tools/setup-login.html: đó là GitHub token đã mã hoá bằng tên + mật khẩu,
+// không ai dùng được nếu không biết mật khẩu. Để trống login => chế độ demo.
 window.SITE_CONFIG = {
-  supabaseUrl: "",      // ví dụ: "https://abcdxyz.supabase.co"
-  supabaseAnonKey: "",  // Project Settings → API → anon public key
+  github: { owner: "sucalb", repo: "shakuhachishop", branch: "main" },
+  login: null,
 };

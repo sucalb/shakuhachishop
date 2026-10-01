@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex">
+  <title>Tạo tài khoản quản trị – Old Shakuhachi Shop</title>
+  <style>
+    :root { --ink: #1b1916; --muted: #7d7469; --line: #e0d6c6; --bg: #f3ede2; --ok: #2f6b45; --bad: #b3261e; }
+    * { box-sizing: border-box; }
+    body { margin: 0; background: var(--bg); color: var(--ink); font: 15px/1.6 system-ui, sans-serif; }
+    main { width: min(640px, 100% - 32px); margin: 40px auto; background: #fff; border: 1px solid var(--line); border-radius: 10px; padding: 28px; display: grid; gap: 16px; }
+    h1 { margin: 0; font-size: 1.4rem; }
+    p { margin: 0; }
+    .muted { color: var(--muted); font-size: .9rem; }
+    label { display: grid; gap: 6px; font-weight: 600; font-size: .92rem; }
+    input, textarea { font: inherit; padding: 9px 12px; border: 1px solid var(--line); border-radius: 8px; width: 100%; font-weight: 400; }
+    textarea { font-family: ui-monospace, monospace; font-size: 12.5px; min-height: 150px; }
+    button { font: inherit; font-weight: 600; padding: 10px 18px; border-radius: 8px; border: 0; background: var(--ink); color: #fff; cursor: pointer; justify-self: start; }
+    button:disabled { opacity: .5; }
+    .msg { font-size: .92rem; }
+    .msg.ok { color: var(--ok); }
+    .msg.bad { color: var(--bad); }
+    ol { margin: 0; padding-left: 20px; }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>Tạo tài khoản quản trị</h1>
+    <p class="muted">Trang này chạy hoàn toàn trong trình duyệt của bạn; không gửi mật khẩu hay token đi đâu (chỉ gọi GitHub để kiểm tra token có quyền ghi). Kết quả là một đoạn mã đã mã hoá để dán vào <code>config.js</code>.</p>
+    <ol class="muted">
+      <li>Tạo GitHub token: github.com → Settings → Developer settings → Fine-grained tokens → Generate new token. Chọn <b>Only select repositories</b> → repo web; quyền <b>Contents: Read and write</b>; đặt hạn 1 năm.</li>
+      <li>Điền tên đăng nhập, mật khẩu (ít nhất 10 ký tự) cho khách và token vào dưới đây.</li>
+      <li>Chép kết quả vào <code>config.js</code> (thay dòng <code>login: null,</code>) rồi đẩy lên GitHub.</li>
+    </ol>
+    <form id="f" autocomplete="off">
+      <div style="display:grid;gap:14px">
+        <label>Repo (chủ/tên)<input name="repo" value="sucalb/shakuhachishop" required></label>
+        <label>Tên đăng nhập cho khách<input name="user" required autocapitalize="off" spellcheck="false"></label>
+        <label>Mật khẩu (ít nhất 10 ký tự)<input name="pass" type="password" minlength="10" required autocomplete="new-password"></label>
+        <label>Nhập lại mật khẩu<input name="pass2" type="password" minlength="10" required autocomplete="new-password"></label>
+        <label>GitHub token<input name="token" type="password" required spellcheck="false" autocomplete="off"></label>
+        <button type="submit">Tạo mã đăng nhập</button>
+        <p class="msg" id="msg"></p>
+        <label>Dán đoạn này vào config.js<textarea id="out" readonly></textarea></label>
+      </div>
+    </form>
+  </main>
+  <script>
+    const b64 = (bytes) => btoa(String.fromCharCode(...new Uint8Array(bytes)));
+    const msg = document.getElementById("msg");
+    const say = (t, cls) => { msg.textContent = t; msg.className = "msg " + (cls || ""); };
+
+    document.getElementById("f").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const f = e.target.elements;
+      const btn = e.target.querySelector("button");
+      const [owner, repo] = f.repo.value.trim().split("/");
+      const user = f.user.value.trim().toLowerCase();
+      if (f.pass.value !== f.pass2.value) return say("Hai lần nhập mật khẩu không khớp.", "bad");
+      btn.disabled = true;
+      say("Đang kiểm tra token…");
+      try {
+        const res = await fetch(`https://api.github.com/repos/${owner}/${repo}`, {
+          headers: { Accept: "application/vnd.github+json", Authorization: `Bearer ${f.token.value.trim()}` },
+        });
+        if (!res.ok) throw new Error(`Token không mở được repo ${owner}/${repo} (${res.status}).`);
+        const info = await res.json();
+        if (!info.permissions || !info.permissions.push) throw new Error("Token chưa có quyền ghi (Contents: Read and write).");
+
+        const salt = crypto.getRandomValues(new Uint8Array(16));
+        const iv = crypto.getRandomValues(new Uint8Array(12));
+        const iterations = 310000;
+        const material = await crypto.subtle.importKey("raw", new TextEncoder().encode(`${user}\n${f.pass.value}`), "PBKDF2", false, ["deriveKey"]);
+        const key = await crypto.subtle.deriveKey({ name: "PBKDF2", salt, iterations, hash: "SHA-256" }, material, { name: "AES-GCM", length: 256 }, false, ["encrypt"]);
+        const data = await crypto.subtle.encrypt({ name: "AES-GCM", iv }, key, new TextEncoder().encode(f.token.value.trim()));
+
+        document.getElementById("out").value =
+`  login: {
+    iterations: ${iterations},
+    salt: "${b64(salt)}",
+    iv: "${b64(iv)}",
+    data: "${b64(data)}",
+  },`;
+        f.token.value = f.pass.value = f.pass2.value = "";
+        say(`Xong. Token có quyền ghi vào ${owner}/${repo}. Chép đoạn bên dưới vào config.js. Nhớ ghi lại tên đăng nhập "${user}" và mật khẩu để gửi khách.`, "ok");
+      } catch (err) {
+        say(err.message, "bad");
+      } finally {
+        btn.disabled = false;
+      }
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,93 @@
+{
+  "flutes": [
+    {
+      "id": "seien-19",
+      "name": "1.9 Seien Shakuhachi",
+      "maker": "Seien",
+      "length": "1.9",
+      "collection": "jiari",
+      "price": 350,
+      "status": "available",
+      "images": [
+        "assets/seien.jpg"
+      ],
+      "youtube": "",
+      "description": "A 1.9 Seien shakuhachi for sale.\nThe utaguchi insert was missing when it came in, so it has been replaced with bull bone.\nThe sound is beautiful. Please watch the video for your reference.\nAsking price is 350 USD plus shipping.",
+      "sort": 1
+    },
+    {
+      "id": "sample-edo-antique",
+      "name": "Antique Edo Period Shakuhachi",
+      "maker": "Unknown",
+      "length": "1.8",
+      "collection": "edo",
+      "price": 1200,
+      "status": "available",
+      "images": [
+        "assets/edo-antique.jpg",
+        "assets/edo-antique-2.jpg",
+        "assets/edo-antique-3.jpg",
+        "assets/edo-antique-4.jpg"
+      ],
+      "youtube": "https://www.youtube.com/watch?v=ksansOKZkDo",
+      "description": "Sample listing. Replace with a real Shakuhachi from the shop.\nAn old Shakuhachi with a deep, warm patina and a metal band at the joint, shown on a display stand.\nThe video is a recording of the honkyoku Kyorei for reference.",
+      "sample": true,
+      "sort": 2
+    },
+    {
+      "id": "sample-edo-komuso",
+      "name": "Old Plain Shakuhachi",
+      "maker": "Unknown",
+      "length": "1.8",
+      "collection": "edo",
+      "price": 950,
+      "status": "sold",
+      "images": [
+        "assets/edo-met.jpg",
+        "assets/edo-met-2.jpg",
+        "assets/edo-met-3.jpg"
+      ],
+      "youtube": "",
+      "description": "Sample listing. Replace with a real Shakuhachi from the shop.\nA plain old Shakuhachi with thread binding near the mouthpiece and a separate end cap.",
+      "sample": true,
+      "sort": 3
+    },
+    {
+      "id": "sample-jinashi-18",
+      "name": "1.8 Jinashi Shakuhachi",
+      "maker": "Unknown",
+      "length": "1.8",
+      "collection": "jinashi",
+      "price": 480,
+      "status": "available",
+      "images": [
+        "assets/jinashi.jpg",
+        "assets/jinashi-2.jpg",
+        "assets/jinashi-3.jpg"
+      ],
+      "youtube": "https://www.youtube.com/watch?v=DOoWrAKQ_2Y",
+      "description": "Sample listing. Replace with a real Shakuhachi from the shop.\nNatural bore, light honey-coloured bamboo with root end and binding at the nodes.\nThe video is a recording of Shika no Tōne for reference.",
+      "sample": true,
+      "sort": 4
+    },
+    {
+      "id": "sample-jinashi-24",
+      "name": "2.4 Jinashi Shakuhachi",
+      "maker": "Unknown",
+      "length": "2.4",
+      "collection": "jinashi",
+      "price": 650,
+      "status": "reserved",
+      "images": [
+        "assets/jinashi-bound.jpg",
+        "assets/jinashi-bound-2.jpg",
+        "assets/jinashi-bound-3.jpg"
+      ],
+      "youtube": "https://www.youtube.com/watch?v=4jzH55i5a4U",
+      "description": "Sample listing. Replace with a real Shakuhachi from the shop.\nA long, dark bamboo Shakuhachi with rattan binding along its length. Deep and slow to speak.",
+      "sample": true,
+      "sort": 5
+    }
+  ],
+  "settings": {}
+}

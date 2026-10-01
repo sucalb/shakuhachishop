@@ -1,7 +1,7 @@
 const $ = (s, el = document) => el.querySelector(s);
 const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
 // Only allow image sources we produce: uploaded https URLs, bundled assets, or demo-mode data URLs.
-const safeImg = (u) => (/^(https:\/\/|assets\/|data:image\/(jpeg|png|webp);)/.test(u || "") ? esc(u) : "");
+const safeImg = (u) => (/^(https:\/\/|assets\/|uploads\/|data:image\/(jpeg|png|webp);)/.test(u || "") ? esc(u) : "");
 const safeUrl = (u) => (/^https:\/\//.test(u || "") ? esc(u) : "#");
 const money = (n) => (n || n === 0) && n !== "" ? "$" + Number(n).toLocaleString("en-US") : "Price on request";
 const params = new URLSearchParams(location.search);
