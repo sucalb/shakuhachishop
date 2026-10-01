@@ -69,10 +69,11 @@ function renderChrome() {
 function card(f) {
   const status = f.status !== "available" ? `<span class="tag ${esc(f.status)}">${STATUS[f.status] || ""}</span>` : "";
   const video = youtubeId(f.youtube) ? `<span class="tag video">▶ Video</span>` : "";
+  const sample = f.sample ? `<span class="tag sample">Sample</span>` : "";
   const cover = safeImg((f.images || [])[0]);
   return `
     <a class="card reveal" href="flute.html?id=${encodeURIComponent(f.id)}">
-      <div class="ph">${cover ? `<img src="${cover}" alt="${esc(f.name)}" loading="lazy">` : ""}${status}${video}</div>
+      <div class="ph">${cover ? `<img src="${cover}" alt="${esc(f.name)}" loading="lazy">` : ""}${status}${video}${sample}</div>
       <h3>${esc(f.name)}</h3>
       <p class="meta">${esc(f.length)} shaku${pitchOf(f)} · ${f.status === "sold" ? "Sold" : money(f.price)}</p>
     </a>`;
@@ -147,8 +148,21 @@ function renderReviews() {
     <a class="btn" ${ext(S.contact.reviews)}>Read all reviews on Facebook</a>`;
 }
 
+function renderListen() {
+  const el = $("#listen");
+  const l = S.listen || {};
+  const vid = youtubeId(l.youtube);
+  if (!vid) return el.remove();
+  el.innerHTML = `
+    <p class="kicker">Listen</p>
+    <h3>${esc(l.title)}</h3>
+    ${l.caption ? `<p>${esc(l.caption)}</p>` : ""}
+    <div class="yt"><iframe src="https://www.youtube-nocookie.com/embed/${vid}" title="${esc(l.title)}" loading="lazy" allow="accelerometer; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>`;
+}
+
 function renderHome() {
   renderHero();
+  renderListen();
   renderCollections();
   renderScale();
   renderReviews();
@@ -232,6 +246,7 @@ function renderFlute() {
     <div class="info">
       <p class="kicker">${c ? `<a href="catalogue.html?c=${c.id}">${esc(c.title)}</a>` : ""}</p>
       <h1 class="title">${esc(f.name)}</h1>
+      ${f.sample ? `<p class="sample-note">Sample listing, shown to illustrate the shop.</p>` : ""}
       <p class="price">${f.status === "sold" ? "Sold" : money(f.price)} <small>${f.status === "available" ? "plus shipping" : STATUS[f.status] || ""}</small></p>
       <dl class="specs">
         ${f.maker ? `<dt>Maker</dt><dd>${esc(f.maker)}</dd>` : ""}

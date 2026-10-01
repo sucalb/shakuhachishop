@@ -141,7 +141,7 @@
       return `<li class="row" data-id="${esc(f.id)}">
         <div class="thumb">${cover ? `<img src="${cover}" alt="">` : ""}</div>
         <div class="row-main">
-          <strong>${esc(f.name || "(chưa có tên)")}</strong>
+          <strong>${esc(f.name || "(chưa có tên)")}${f.sample ? ` <span class="muted">(mẫu – xoá khi có sáo thật)</span>` : ""}</strong>
           <span class="muted">${esc([COLLECTION_NAMES[f.collection], f.length && `${f.length} shaku`, f.price && `$${f.price}`, `${(f.images || []).length} ảnh`, ytId(f.youtube) && "có video"].filter(Boolean).join(" · "))}</span>
         </div>
         <button type="button" class="status ${esc(f.status)}" data-act="status" title="Bấm để đổi trạng thái">${STATUS_VI[f.status] || f.status}</button>
@@ -365,14 +365,24 @@
   // ---------- Ảnh trang chủ ----------
   function renderHero() {
     const hero = JSON.parse(JSON.stringify(state.settings.hero || []));
+    const listen = { ...(state.settings.listen || {}) };
     app.innerHTML = `
       <div class="page-head"><div>
-        <h1>Ảnh trang chủ</h1>
+        <h1>Trang chủ</h1>
         <p class="muted">Ảnh lớn toàn màn hình khi khách vừa vào web. Có nhiều ảnh thì sẽ tự chuyển qua lại. Nên dùng ảnh ngang, đẹp, rõ nét; chữ 尺八 sẽ hiện đè ở giữa ảnh.</p>
       </div></div>
       <section class="panel">
         <div class="images" id="heroImages"></div>
         ${dropzone("heroDrop", "“Vùng giữ” chọn phần ảnh luôn được nhìn thấy khi màn hình bị cắt (điện thoại).")}
+      </section>
+      <section class="panel">
+        <h2>Video giới thiệu</h2>
+        <p class="muted">Hiện trong phần “The way of the bamboo” trên trang chủ. Để trống link thì ẩn đi.</p>
+        <label>Link YouTube<input id="listenUrl" value="${esc(listen.youtube)}" placeholder="https://www.youtube.com/watch?v=…"></label>
+        <div class="grid">
+          <label>Tên bài<input id="listenTitle" value="${esc(listen.title)}" placeholder="VD: Kyorei"></label>
+          <label>Chú thích (tiếng Anh)<input id="listenCaption" value="${esc(listen.caption)}"></label>
+        </div>
       </section>
       ${saveBar("saveHero")}`;
     const draw = () => renderImageGrid(document.getElementById("heroImages"), hero, {
@@ -387,9 +397,12 @@
       if (s) hero[Number(s.dataset.focus)].focus = s.value;
     });
     wireDropzone(document.getElementById("heroDrop"), (src) => { hero.push({ src, focus: "50% 50%" }); draw(); });
-    document.getElementById("saveHero").onclick = (e) => {
+    document.getElementById("saveHero").onclick = async (e) => {
       if (!hero.length) return toast("Cần ít nhất 1 ảnh.", true);
-      saveSetting("hero", hero, e.target);
+      const v = { youtube: document.getElementById("listenUrl").value.trim(), title: document.getElementById("listenTitle").value.trim(), caption: document.getElementById("listenCaption").value.trim() };
+      if (v.youtube && !ytId(v.youtube)) return toast("Link YouTube chưa đúng.", true);
+      await saveSetting("hero", hero, e.target);
+      await saveSetting("listen", v, e.target);
     };
   }
 

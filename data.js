@@ -10,7 +10,15 @@ const DEFAULTS = {
   // Full-screen photos on the home page. Several photos cross-fade every few seconds.
   hero: [
     { src: "assets/hero.jpg", focus: "50% 42%" },
+    { src: "assets/komuso.jpg", focus: "50% 30%" },
   ],
+
+  // Video shown in "The way of the bamboo" section on the home page.
+  listen: {
+    youtube: "https://www.youtube.com/watch?v=ksansOKZkDo",
+    title: "Kyorei",
+    caption: "One of the oldest pieces of the Fuke tradition, performed by Christopher Yohmei Blasdel.",
+  },
 
   // The three collections. Ids are fixed; text and cover photo are editable.
   collections: [
@@ -20,7 +28,7 @@ const DEFAULTS = {
       title: "Edo Shakuhachi",
       text: "Old flutes with lacquer, binding and decoration, chosen for their history as much as their sound. Each one is unique.",
       cta: "Explore the old flutes",
-      image: "assets/hero.jpg",
+      image: "assets/edo-cover.jpg",
     },
     {
       id: "jinashi",
@@ -28,7 +36,7 @@ const DEFAULTS = {
       title: "Jinashi Shakuhachi",
       text: "Bamboo left as it grew, without paste in the bore. Breathy and earthy, for honkyoku and meditation.",
       cta: "Choose your sound",
-      image: "",
+      image: "assets/jinashi-bound.jpg",
     },
     {
       id: "jiari",
@@ -67,6 +75,63 @@ const SEED_FLUTES = [
     youtube: "",
     description: "A 1.9 Seien shakuhachi for sale.\nThe utaguchi insert was missing when it came in, so it has been replaced with bull bone.\nThe sound is beautiful. Please watch the video for your reference.\nAsking price is 350 USD plus shipping.",
     sort: 1,
+  },
+  // Sample listings to show the layout. sample: true adds a "Sample" label; delete them in admin.html.
+  {
+    id: "sample-edo-antique",
+    name: "Antique Edo Period Shakuhachi",
+    maker: "Unknown",
+    length: "1.8",
+    collection: "edo",
+    price: 1200,
+    status: "available",
+    images: ["assets/edo-antique.jpg"],
+    youtube: "https://www.youtube.com/watch?v=ksansOKZkDo",
+    description: "Sample listing. Replace with a real flute from the shop.\nAn old flute with a deep, warm patina and a metal band at the joint, shown on a display stand.\nThe video is a recording of the honkyoku Kyorei for reference.",
+    sample: true,
+    sort: 2,
+  },
+  {
+    id: "sample-edo-komuso",
+    name: "Old Plain Shakuhachi",
+    maker: "Unknown",
+    length: "1.8",
+    collection: "edo",
+    price: 950,
+    status: "sold",
+    images: ["assets/edo-met.jpg"],
+    youtube: "",
+    description: "Sample listing. Replace with a real flute from the shop.\nA plain old flute with thread binding near the mouthpiece and a separate end cap.",
+    sample: true,
+    sort: 3,
+  },
+  {
+    id: "sample-jinashi-18",
+    name: "1.8 Jinashi Shakuhachi",
+    maker: "Unknown",
+    length: "1.8",
+    collection: "jinashi",
+    price: 480,
+    status: "available",
+    images: ["assets/jinashi.jpg"],
+    youtube: "https://www.youtube.com/watch?v=DOoWrAKQ_2Y",
+    description: "Sample listing. Replace with a real flute from the shop.\nNatural bore, light honey-coloured bamboo with root end and binding at the nodes.\nThe video is a recording of Shika no Tōne for reference.",
+    sample: true,
+    sort: 4,
+  },
+  {
+    id: "sample-jinashi-24",
+    name: "2.4 Jinashi Shakuhachi",
+    maker: "Unknown",
+    length: "2.4",
+    collection: "jinashi",
+    price: 650,
+    status: "reserved",
+    images: ["assets/jinashi-bound.jpg"],
+    youtube: "https://www.youtube.com/watch?v=4jzH55i5a4U",
+    description: "Sample listing. Replace with a real flute from the shop.\nA long, dark bamboo flute with rattan binding along its length. Deep and slow to speak.",
+    sample: true,
+    sort: 5,
   },
 ];
 
