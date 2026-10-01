@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex">
+  <title>Quản trị – TranCao Shakuhachi</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600&family=Cormorant+SC:wght@500&family=Shippori+Mincho+B1:wght@600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="admin.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="topbar-inner">
+      <a class="logo" href="admin.html"><span class="seal">尺八</span>TranCao Shakuhachi <small>Quản trị</small></a>
+      <span class="mode" id="modeBadge"></span>
+      <nav class="top-actions">
+        <a href="index.html" target="_blank" rel="noopener">Xem website ↗</a>
+        <button type="button" id="signOut" hidden>Đăng xuất</button>
+      </nav>
+    </div>
+    <nav class="tabs" id="tabs" hidden>
+      <button type="button" data-tab="flutes">Sáo</button>
+      <button type="button" data-tab="hero">Ảnh trang chủ</button>
+      <button type="button" data-tab="collections">Danh mục</button>
+      <button type="button" data-tab="reviews">Đánh giá</button>
+      <button type="button" data-tab="contact">Liên hệ</button>
+    </nav>
+  </header>
+
+  <div class="demo-note" id="demoNote" hidden>
+    <strong>Chế độ demo.</strong> Thay đổi chỉ lưu trên trình duyệt này và chỉ bạn nhìn thấy. Khi kết nối Supabase (xem README), dữ liệu sẽ lưu online và hiện cho mọi người.
+    <button type="button" id="resetDemo">Khôi phục dữ liệu mẫu</button>
+  </div>
+
+  <main class="container" id="app"></main>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script src="config.js"></script>
+  <script src="data.js"></script>
+  <script src="store.js"></script>
+  <script src="admin.js"></script>
+</body>
+</html>
