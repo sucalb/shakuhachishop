@@ -34,11 +34,11 @@ Khi `config.js` còn trống, web chạy **chế độ demo**: thay đổi trong
 ## Kết nối Supabase (để khách tự đăng)
 
 1. Tạo project miễn phí tại https://supabase.com, nên dùng email của khách để khách giữ quyền sở hữu.
-2. **SQL Editor** → dán toàn bộ `supabase/schema.sql` → **Run**.
+2. **SQL Editor** → dán toàn bộ `supabase/schema.sql` → **Run**. Sau đó New query → dán `supabase/seed.sql` → **Run** để nạp các sản phẩm đang có.
 3. **Authentication → Users → Add user**: tạo tài khoản quản trị cho khách (email + mật khẩu).
 4. **Authentication → Sign In / Providers**: tắt **Allow new users to sign up**. Nếu không tắt, người lạ có thể tự đăng ký rồi sửa dữ liệu.
 5. **Project Settings → API**: chép `Project URL` và `anon public key` vào `config.js`.
-6. Mở `admin.html`, đăng nhập. Lần đầu web dùng nội dung mặc định trong `data.js`; bấm **Lưu** ở từng mục để ghi vào Supabase. Ở mục **Sáo** bấm **Nhập sáo đang có trên web cũ** để đưa cây Seien vào.
+6. Mở `admin.html`, đăng nhập. Lần đầu web dùng nội dung mặc định trong `data.js`; bấm **Lưu** ở từng mục để ghi vào Supabase.
 
 `anon key` được phép để công khai. Quyền ghi dữ liệu đã giới hạn cho tài khoản đăng nhập bằng Row Level Security trong `schema.sql`.
 
