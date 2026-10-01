@@ -11,6 +11,7 @@
   --radius: 10px;
 }
 * { box-sizing: border-box; }
+[hidden] { display: none !important; }
 body { margin: 0; font-family: "Be Vietnam Pro", system-ui, sans-serif; font-size: 15px; line-height: 1.55; color: var(--ink); background: var(--bg); }
 a { color: inherit; }
 button, input, textarea, select { font: inherit; color: inherit; }
