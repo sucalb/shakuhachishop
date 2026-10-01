@@ -50,7 +50,7 @@ const Store = (() => {
     try { return sessionStorage.getItem(TOKEN_KEY); } catch (e) { return null; }
   }
   async function api(path, opts = {}, tok = token()) {
-    const res = await fetch(`https://api.github.com/repos/${gh.owner}/${gh.repo}/${path}`, {
+    const res = await fetch(`https://api.github.com/repos/${gh.owner}/${gh.repo}${path ? "/" + path : ""}`, {
       ...opts,
       headers: {
         Accept: "application/vnd.github+json",
