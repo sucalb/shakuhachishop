@@ -91,9 +91,7 @@ h1, h2, h3, p, blockquote, figure { margin: 0; }
 }
 .top.open .nav { display: grid; }
 .nav a { text-decoration: none; padding: 10px 0; border-bottom: 1px solid rgba(243,237,226,.14); display: flex; justify-content: space-between; align-items: baseline; font: 400 24px var(--display); }
-.nav a span { font: 400 14px var(--jp); color: var(--bamboo); }
 .nav a:hover { color: #fff; }
-.nav a:hover span { color: var(--shu); }
 
 /* ---------- Hero ---------- */
 .hero { position: relative; height: clamp(300px, 54vh, 540px); overflow: hidden; background: var(--sumi); color: #fff; }

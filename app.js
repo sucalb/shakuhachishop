@@ -7,7 +7,6 @@ const money = (n) => (n || n === 0) && n !== "" ? "$" + Number(n).toLocaleString
 const params = new URLSearchParams(location.search);
 const STATUS = { available: "Available", reserved: "On hold", sold: "Sold" };
 const GHOST = { edo: "江戸", jinashi: "地無", jiari: "地有", wood: "木", bamboo: "竹" };
-const NAV_JP = { edo: "江戸", jinashi: "地無し", jiari: "地有り", wood: "木管", bamboo: "竹材" };
 const pitchOf = (f) => (PITCH[f.length] ? ` · ${PITCH[f.length]}` : "");
 const lengthGroup = (id) => JIARI_LENGTHS.find((g) => g.id === id);
 const paragraphs = (t) => String(t || "").split(/\n+/).map((s) => s.trim()).filter(Boolean);
@@ -42,10 +41,10 @@ function renderChrome() {
     <a class="brand" href="index.html"><span class="seal">尺八</span><b>Old Shakuhachi Shop</b></a>
     <a class="fb-mini" ${ext(S.contact.messenger)} aria-label="Message us on Facebook"><em>Message us</em>${FB_ICON}</a>
     <nav class="nav">
-      <a href="catalogue.html">All Shakuhachi <span>尺八</span></a>
-      ${S.collections.map((c) => `<a href="catalogue.html?c=${c.id}">${esc(c.title)} <span>${NAV_JP[c.id] || ""}</span></a>`).join("")}
-      <a href="index.html#reviews">Reviews <span>評</span></a>
-      <a ${ext(S.contact.facebook)}>Facebook <span>連絡</span></a>
+      <a href="catalogue.html">All Shakuhachi</a>
+      ${S.collections.map((c) => `<a href="catalogue.html?c=${c.id}">${esc(c.title)}</a>`).join("")}
+      <a href="index.html#reviews">Reviews</a>
+      <a ${ext(S.contact.facebook)}>Facebook</a>
     </nav>`;
   const burger = $(".burger", header);
   burger.addEventListener("click", () => {
