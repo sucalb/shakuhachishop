@@ -17,7 +17,7 @@ const DEFAULTS = {
   collections: [
     {
       id: "edo",
-      kicker: "Edo & Meiji period",
+      kicker: "Edo period",
       title: "Edo Shakuhachi",
       text: "Old Shakuhachi were made and played by monks during the Edo period. Each one has a unique sound.",
       cta: "Explore the old Shakuhachi",

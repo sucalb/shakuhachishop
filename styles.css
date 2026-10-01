@@ -131,6 +131,19 @@ h1, h2, h3, p, blockquote, figure { margin: 0; }
 .hero-foot a::after { content: ""; width: 1px; height: 44px; background: linear-gradient(rgba(255,255,255,.8), transparent); animation: drip 2.4s ease-in-out infinite; }
 @keyframes drip { 0% { transform: scaleY(0); transform-origin: top; } 50% { transform: scaleY(1); transform-origin: top; } 51% { transform-origin: bottom; } 100% { transform: scaleY(0); transform-origin: bottom; } }
 
+/* Split hero on wider screens: ink panel with the mark on the left, photo on the right,
+   so portrait photos are not cut into a thin strip. */
+@media (min-width: 761px) {
+  .hero { height: clamp(360px, 58vh, 580px); background: var(--sumi) var(--paper-grain); }
+  .slides { position: absolute; top: 0; bottom: 0; left: 50%; right: 0; overflow: hidden; }
+  .slides img { filter: none; }
+  .hero::after { left: 50%; background: linear-gradient(90deg, rgba(27,25,22,.55), transparent 22%); }
+  .hero-center { right: 50%; }
+  .enso { width: min(400px, 40vw, 88%); color: rgba(243,237,226,.3); }
+  .hero-foot { right: 50%; width: auto; justify-content: center; gap: 20px; bottom: 24px; color: rgba(243,237,226,.6); }
+  .hero-foot span + span::before { content: "·"; margin-right: 20px; }
+}
+
 /* ---------- Intro ---------- */
 .intro { width: min(780px, 100% - 32px); margin: 0 auto; padding: clamp(32px, 5vw, 56px) 0 clamp(8px, 2vw, 24px); text-align: center; display: grid; justify-items: center; gap: 16px; }
 .intro .lede { font: 400 clamp(23px, 3vw, 30px)/1.4 var(--display); }
