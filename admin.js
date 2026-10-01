@@ -448,7 +448,7 @@
     app.innerHTML = `
       <div class="page-head"><div>
         <h1>Đánh giá</h1>
-        <p class="muted">Hiện ở cuối trang chủ, kèm nút dẫn sang <a href="${esc(contact.reviews)}" target="_blank" rel="noopener">trang đánh giá trên Facebook</a>. Chép khoảng 6–10 đánh giá hay nhất từ Facebook vào đây; trên web chúng hiện thành một dải trượt ngang, đánh giá dài có nút “Read more”.</p>
+        <p class="muted">Hiện ở cuối trang chủ, kèm nút dẫn sang <a href="${esc(contact.reviews)}" target="_blank" rel="noopener">trang đánh giá trên Facebook</a>. Chép khoảng 6–10 đánh giá hay nhất từ Facebook vào đây; trên web mỗi đánh giá là một thẻ nằm ngang xếp từ trên xuống, đánh giá dài có nút “Read more”.</p>
       </div></div>
       <section class="panel">
         <h2>Tổng quan (lấy từ tab Đánh giá trên Facebook)</h2>

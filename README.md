@@ -1,4 +1,4 @@
-# TranCao Shakuhachi – shakuhachishop.com
+# Old Shakuhachi Shop – shakuhachishop.com
 
 Web bán sáo shakuhachi, giao diện tiếng Anh, không có thanh toán: khách bấm **Message us** để nhắn tin qua Facebook. Web tĩnh (HTML/CSS/JS thuần, không cần build).
 

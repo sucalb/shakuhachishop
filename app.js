@@ -31,7 +31,7 @@ function renderChrome() {
   const header = $("[data-header]");
   header.innerHTML = `
     <button class="burger" aria-label="Menu" aria-expanded="false"><i></i><em>Menu</em></button>
-    <a class="brand" href="index.html"><span class="seal">尺八</span><b>TranCao Shakuhachi</b></a>
+    <a class="brand" href="index.html"><span class="seal">尺八</span><b>Old Shakuhachi Shop</b></a>
     <a class="fb-mini" ${ext(S.contact.messenger)} aria-label="Message us on Facebook"><em>Message us</em>${FB_ICON}</a>
     <nav class="nav">
       <a href="catalogue.html">All flutes <span>尺八</span></a>
@@ -50,11 +50,11 @@ function renderChrome() {
 
   $("[data-footer]").innerHTML = `
     <div class="foot-inner on-dark">
-      <p class="foot-quote">一音成仏</p>
-      <p>Enlightenment in a single sound</p>
+      <p class="foot-title">Old Shakuhachi Shop</p>
+      <p class="foot-sub">To buy a flute or ask a question, send us a message.</p>
       <a class="btn" ${ext(S.contact.messenger)}>${FB_ICON} Message us on Facebook</a>
       <div class="foot-bottom">
-        <span class="brand-mini"><span class="seal">尺八</span> TranCao Shakuhachi</span>
+        <span class="brand-mini"><span class="seal">尺八</span> Old Shakuhachi Shop</span>
         <nav class="foot-links">
           <a href="catalogue.html">Catalogue</a>
           <a ${ext(S.contact.facebook)}>Facebook page</a>
@@ -130,7 +130,7 @@ function renderScale() {
 }
 
 function renderReviews() {
-  const list = (S.reviews || []).filter((r) => r.text);
+  const list = (S.reviews || []).filter((r) => r.text).slice(0, 12);
   const quotes = list.map((r) => `
     <figure class="review">
       <blockquote>${esc(r.text)}</blockquote>
@@ -145,28 +145,17 @@ function renderReviews() {
       <strong>${esc(sum.recommend)}</strong>
       <span>recommend us on Facebook<br>${esc(sum.count)} reviews</span>
     </a>` : ""}
-    ${quotes ? `<div class="review-rail ${list.length < 3 ? "few" : ""}">
-      <div class="review-track" tabindex="0" aria-label="Reviews">${quotes}</div>
-      ${list.length > 2 ? `<div class="rail-nav"><button type="button" class="nav-btn prev" aria-label="Previous reviews">‹</button>
-      <button type="button" class="nav-btn next" aria-label="Next reviews">›</button></div>` : ""}
-    </div>` : ""}
+    ${quotes ? `<div class="review-list">${quotes}</div>` : ""}
     <a class="btn" ${ext(S.contact.reviews)}>Read all reviews on Facebook</a>`;
 
-  const track = $(".review-track");
-  if (!track) return;
   // Long reviews are clamped; show "Read more" only where text is actually cut.
-  track.querySelectorAll(".review").forEach((card) => {
+  document.querySelectorAll("#reviews .review").forEach((card) => {
     const q = $("blockquote", card), more = $(".more-btn", card);
     if (q.scrollHeight > q.clientHeight + 4) more.hidden = false;
     more.onclick = () => {
       const open = card.classList.toggle("open");
       more.textContent = open ? "Show less" : "Read more";
     };
-  });
-  const step = () => (track.querySelector(".review")?.offsetWidth || 300) + 24;
-  $("#reviews").addEventListener("click", (e) => {
-    if (e.target.closest(".review-rail .prev")) track.scrollBy({ left: -step(), behavior: "smooth" });
-    if (e.target.closest(".review-rail .next")) track.scrollBy({ left: step(), behavior: "smooth" });
   });
 }
 
@@ -196,7 +185,7 @@ function renderCatalogue() {
     $("#cat-kicker").textContent = c ? c.kicker : "Catalogue";
     $("#cat-title").textContent = g ? g.title : c ? c.title : "All Flutes";
     $("#cat-text").textContent = c ? c.text : "Every flute currently in the shop.";
-    document.title = `${g ? g.title : c ? c.title : "Catalogue"} – TranCao Shakuhachi`;
+    document.title = `${g ? g.title : c ? c.title : "Catalogue"} – Old Shakuhachi Shop`;
 
     $("#tabs").innerHTML = tabs.map((t) =>
       `<a href="?c=${t.id}" data-c="${t.id}" ${t.id === current ? 'aria-current="page"' : ""}>${esc(t.title)}</a>`).join("");
@@ -235,7 +224,7 @@ function renderFlute() {
     return;
   }
   const c = S.collections.find((x) => x.id === f.collection);
-  document.title = `${f.name} – TranCao Shakuhachi`;
+  document.title = `${f.name} – Old Shakuhachi Shop`;
   const imgs = (f.images || []).map(safeImg).filter(Boolean);
   const vid = youtubeId(f.youtube);
   const many = imgs.length > 1;
