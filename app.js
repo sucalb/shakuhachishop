@@ -25,6 +25,14 @@ let S;       // site settings (contact, hero, collections, reviews)
 let FLUTES;  // inventory
 
 const ext = (url) => `href="${safeUrl(url)}" target="_blank" rel="noopener"`;
+// Phone is optional: returns "" when not set, so nothing is shown.
+const PHONE_ICON = `<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M6.6 10.8a15.1 15.1 0 0 0 6.6 6.6l2.2-2.2a1 1 0 0 1 1-.25 11.4 11.4 0 0 0 3.6.57 1 1 0 0 1 1 1V20a1 1 0 0 1-1 1A17 17 0 0 1 3 4a1 1 0 0 1 1-1h3.5a1 1 0 0 1 1 1c0 1.25.2 2.45.57 3.57a1 1 0 0 1-.25 1z"/></svg>`;
+function phoneLink(cls = "") {
+  const p = (S.contact.phone || "").trim();
+  const digits = p.replace(/[^\d+]/g, "");
+  if (digits.replace(/\D/g, "").length < 8) return "";
+  return `<a class="phone ${cls}" href="tel:${esc(digits)}">${PHONE_ICON}<span>${esc(p)}</span></a>`;
+}
 
 // ---------- Shared header and footer ----------
 function renderChrome() {
@@ -51,8 +59,9 @@ function renderChrome() {
   $("[data-footer]").innerHTML = `
     <div class="foot-inner on-dark">
       <p class="foot-title">Old Shakuhachi Shop</p>
-      <p class="foot-sub">To buy a Shakuhachi or ask a question, send us a message.</p>
+      <p class="foot-sub">To buy a Shakuhachi or ask a question, send us a message${S.contact.phone ? " or call us" : ""}.</p>
       <a class="btn" ${ext(S.contact.messenger)}>${FB_ICON} Message us on Facebook</a>
+      ${phoneLink("foot-phone")}
       <div class="foot-bottom">
         <span class="brand-mini"><span class="seal">尺八</span> Old Shakuhachi Shop</span>
         <nav class="foot-links">
@@ -308,6 +317,7 @@ function renderFlute() {
       <div class="desc">${paragraphs(f.description).map((p) => `<p>${esc(p)}</p>`).join("")}</div>
       ${f.status === "sold" ? "" : `
         <a class="btn fb" ${ext(S.contact.messenger)}>${FB_ICON} Message us to buy</a>
+        ${phoneLink("info-phone")}
         <p class="small">Mention “${esc(f.name)}” in your message. Price, shipping and payment are arranged directly with us.</p>`}
     </div>`;
 

@@ -231,6 +231,13 @@ h1, h2, h3, p, blockquote, figure { margin: 0; }
 .foot-bottom .brand-mini { display: flex; align-items: center; gap: 10px; }
 .foot-bottom .seal { font-size: 10px; padding: 5px 3px; }
 
+.phone { display: inline-flex; align-items: center; gap: 8px; text-decoration: none; font-size: 15px; letter-spacing: .04em; }
+.phone svg { width: 16px; height: 16px; }
+.foot-phone { color: #d9cfc1; margin-top: 4px; }
+.foot-phone:hover { color: #fff; }
+.info-phone { color: var(--ink); justify-self: start; }
+.info-phone:hover { color: var(--shu); }
+
 /* ---------- Catalogue ---------- */
 .page { padding: clamp(36px, 6vw, 64px) 0 0; }
 .page-head { text-align: center; display: grid; justify-items: center; }

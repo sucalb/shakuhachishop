@@ -5,6 +5,7 @@ const DEFAULTS = {
     facebook: "https://www.facebook.com/trancaoshakuhachi.com.vn",
     messenger: "https://m.me/trancaoshakuhachi.com.vn",
     reviews: "https://www.facebook.com/trancaoshakuhachi.com.vn/reviews",
+    phone: "", // optional; shown on the site only when filled in
   },
 
   // Full-screen photos on the home page. Several photos cross-fade every few seconds.

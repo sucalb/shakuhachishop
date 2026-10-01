@@ -531,6 +531,10 @@
           <small class="muted">Dạng https://m.me/tên-trang. Bấm thử: <a href="${esc(c.messenger)}" target="_blank" rel="noopener">mở Messenger ↗</a></small>
         </label>
         <label>Trang đánh giá trên Facebook<input id="reviewsUrl" value="${esc(c.reviews)}" placeholder="https://www.facebook.com/…/reviews"></label>
+        <label>Số điện thoại (không bắt buộc)
+          <input id="phone" type="tel" value="${esc(c.phone || "")}" placeholder="VD: +84 912 345 678">
+          <small class="muted">Để trống thì web không hiện số điện thoại. Có điền thì hiện ở chân trang và trang từng cây sáo; nên ghi kèm mã nước (+84) vì khách mua ở nước ngoài.</small>
+        </label>
       </section>
       ${saveBar("saveContact")}`;
     document.getElementById("saveContact").onclick = (e) => {
@@ -540,6 +544,8 @@
         reviews: document.getElementById("reviewsUrl").value.trim(),
       };
       if (Object.values(value).some((u) => !/^https:\/\//.test(u))) return toast("Các link phải bắt đầu bằng https://", true);
+      value.phone = document.getElementById("phone").value.trim();
+      if (value.phone && value.phone.replace(/\D/g, "").length < 8) return toast("Số điện thoại chưa đúng.", true);
       saveSetting("contact", value, e.target);
     };
   }
