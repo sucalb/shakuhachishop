@@ -89,5 +89,10 @@
       "sort": 5
     }
   ],
-  "settings": {}
+  "settings": {
+    "reviewSummary": {
+      "recommend": "100%",
+      "count": 15
+    }
+  }
 }
