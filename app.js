@@ -95,27 +95,26 @@ function renderHero() {
 }
 
 function renderCollections() {
-  $("#collections").innerHTML = S.collections.map((c, i) => {
+  $("#collections").innerHTML = S.collections.map((c) => {
     const count = FLUTES.filter((f) => f.collection === c.id && f.status !== "sold").length;
     const img = safeImg(c.image)
       ? `<img src="${safeImg(c.image)}" alt="${esc(c.title)}" loading="lazy">`
-      : `<div class="ph-empty"><b>${GHOST[c.id] || ""}</b>Photos coming soon</div>`;
+      : `<div class="ph-empty"><b>${GHOST[c.id] || ""}</b></div>`;
     const lengths = c.id === "jiari"
       ? `<p class="len-links">${JIARI_LENGTHS.map((g) => `<a href="catalogue.html?c=jiari&l=${g.id}">${g.title.replace(" Shakuhachi", "")}</a>`).join("")}</p>`
       : "";
     return `
-      <section class="feature reveal ${i % 2 ? "flip" : ""}">
-        <div class="feature-text">
-          <span class="ghost" aria-hidden="true">${GHOST[c.id] || ""}</span>
+      <article class="coll-card reveal">
+        <a class="coll-img" href="catalogue.html?c=${c.id}">${img}</a>
+        <div class="coll-body">
           <p class="kicker">${esc(c.kicker)}</p>
-          <h2 class="title">${esc(c.title)}</h2>
-          <p>${esc(c.text)}</p>
+          <h3><a href="catalogue.html?c=${c.id}">${esc(c.title)}</a></h3>
+          <p class="coll-text">${esc(c.text)}</p>
           <p class="count">${count ? `${count} Shakuhachi available` : "New Shakuhachi coming soon"}</p>
           ${lengths}
           <a class="btn" href="catalogue.html?c=${c.id}">${esc(c.cta)}</a>
         </div>
-        <a class="feature-img" href="catalogue.html?c=${c.id}">${img}</a>
-      </section>`;
+      </article>`;
   }).join("");
 }
 
