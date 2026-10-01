@@ -128,14 +128,17 @@ function renderScale() {
     </li>`).join("");
 }
 
+const REVIEW_INTERVAL = 2000; // ms between automatic slides
+
 function renderReviews() {
-  const list = (S.reviews || []).filter((r) => r.text).slice(0, 12);
-  const quotes = list.map((r) => `
-    <figure class="review">
+  const list = (S.reviews || []).filter((r) => r.text);
+  const quotes = list.map((r, i) => `
+    <figure class="review" aria-roledescription="slide" aria-label="${i + 1} of ${list.length}">
       <blockquote>${esc(r.text)}</blockquote>
       <button type="button" class="more-btn" hidden>Read more</button>
       <figcaption>${esc(r.name)}${r.date ? ` · ${esc(r.date)}` : ""}</figcaption>
     </figure>`).join("");
+  const many = list.length > 1;
   const sum = S.reviewSummary || {};
   $("#reviews").innerHTML = `
     <p class="kicker">Reviews</p>
@@ -144,11 +147,21 @@ function renderReviews() {
       <strong>${esc(sum.recommend)}</strong>
       <span>recommend us on Facebook<br>${esc(sum.count)} reviews</span>
     </a>` : ""}
-    ${quotes ? `<div class="review-list">${quotes}</div>` : ""}
+    ${quotes ? `<div class="review-rail" aria-roledescription="carousel" aria-label="Reviews">
+      ${many ? `<button type="button" class="nav-btn prev" aria-label="Previous review">‹</button>` : ""}
+      <div class="review-track">${quotes}</div>
+      ${many ? `<button type="button" class="nav-btn next" aria-label="Next review">›</button>` : ""}
+    </div>
+    ${many ? `<div class="dots">${list.map((_, i) => `<button type="button" aria-label="Review ${i + 1}" data-i="${i}"></button>`).join("")}</div>` : ""}` : ""}
     <a class="btn" ${ext(S.contact.reviews)}>Read all reviews on Facebook</a>`;
 
+  const track = $("#reviews .review-track");
+  if (!track) return;
+  const cards = [...track.querySelectorAll(".review")];
+  const dots = [...document.querySelectorAll("#reviews .dots button")];
+
   // Long reviews are clamped; show "Read more" only where text is actually cut.
-  document.querySelectorAll("#reviews .review").forEach((card) => {
+  cards.forEach((card) => {
     const q = $("blockquote", card), more = $(".more-btn", card);
     if (q.scrollHeight > q.clientHeight + 4) more.hidden = false;
     more.onclick = () => {
@@ -156,6 +169,44 @@ function renderReviews() {
       more.textContent = open ? "Show less" : "Read more";
     };
   });
+  if (!many) return;
+
+  const current = () => Math.round(track.scrollLeft / track.clientWidth);
+  const go = (i) => {
+    const n = (i + cards.length) % cards.length;
+    track.scrollTo({ left: n * track.clientWidth, behavior: "smooth" });
+  };
+  const markDot = () => dots.forEach((d, i) => d.classList.toggle("on", i === current()));
+  track.addEventListener("scroll", () => requestAnimationFrame(markDot), { passive: true });
+  markDot();
+
+  $("#reviews .review-rail").addEventListener("click", (e) => {
+    if (e.target.closest(".prev")) go(current() - 1);
+    if (e.target.closest(".next")) go(current() + 1);
+  });
+  $("#reviews .dots").addEventListener("click", (e) => {
+    const d = e.target.closest("button");
+    if (d) go(Number(d.dataset.i));
+  });
+
+  // Auto-advance; pause while the reader is hovering, touching, focused, or has a review expanded.
+  if (matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  const rail = $("#reviews .review-rail");
+  let paused = false;
+  const pause = () => (paused = true);
+  const resume = () => (paused = false);
+  rail.addEventListener("mouseenter", pause);
+  rail.addEventListener("mouseleave", resume);
+  rail.addEventListener("focusin", pause);
+  rail.addEventListener("focusout", resume);
+  track.addEventListener("touchstart", pause, { passive: true });
+  track.addEventListener("touchend", () => setTimeout(resume, 4000), { passive: true });
+  setInterval(() => {
+    if (paused || document.hidden || track.querySelector(".review.open")) return;
+    const r = track.getBoundingClientRect();
+    if (r.bottom < 0 || r.top > innerHeight) return; // only while on screen
+    go(current() + 1);
+  }, REVIEW_INTERVAL);
 }
 
 function renderHome() {
