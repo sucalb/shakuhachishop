@@ -6,8 +6,8 @@ const safeUrl = (u) => (/^https:\/\//.test(u || "") ? esc(u) : "#");
 const money = (n) => (n || n === 0) && n !== "" ? "$" + Number(n).toLocaleString("en-US") : "Price on request";
 const params = new URLSearchParams(location.search);
 const STATUS = { available: "Available", reserved: "On hold", sold: "Sold" };
-const GHOST = { edo: "江戸", jinashi: "地無", jiari: "地有" };
-const NAV_JP = { edo: "江戸", jinashi: "地無し", jiari: "地有り" };
+const GHOST = { edo: "江戸", jinashi: "地無", jiari: "地有", wood: "木", bamboo: "竹" };
+const NAV_JP = { edo: "江戸", jinashi: "地無し", jiari: "地有り", wood: "木管", bamboo: "竹材" };
 const pitchOf = (f) => (PITCH[f.length] ? ` · ${PITCH[f.length]}` : "");
 const lengthGroup = (id) => JIARI_LENGTHS.find((g) => g.id === id);
 const paragraphs = (t) => String(t || "").split(/\n+/).map((s) => s.trim()).filter(Boolean);
@@ -110,7 +110,7 @@ function renderCollections() {
           <p class="kicker">${esc(c.kicker)}</p>
           <h3><a href="catalogue.html?c=${c.id}">${esc(c.title)}</a></h3>
           <p class="coll-text">${esc(c.text)}</p>
-          <p class="count">${count ? `${count} Shakuhachi available` : "New Shakuhachi coming soon"}</p>
+          <p class="count">${count ? `${count} ${c.id === "bamboo" ? "available" : "Shakuhachi available"}` : c.id === "bamboo" ? "New bamboo coming soon" : "New Shakuhachi coming soon"}</p>
           ${lengths}
           <a class="btn" href="catalogue.html?c=${c.id}">${esc(c.cta)}</a>
         </div>
@@ -198,7 +198,7 @@ function renderCatalogue() {
       (!current || f.collection === current) && (!g || g.match(parseFloat(f.length))));
     $("#grid").innerHTML = list.length
       ? list.map(card).join("")
-      : `<div class="empty"><b>${GHOST[current] || "尺八"}</b><p>No Shakuhachi here right now. New ones are added regularly.</p><a class="btn" ${ext(S.contact.messenger)}>Tell us what you are looking for</a></div>`;
+      : `<div class="empty"><b>${GHOST[current] || "尺八"}</b><p>Nothing here right now. New items are added regularly.</p><a class="btn" ${ext(S.contact.messenger)}>Tell us what you are looking for</a></div>`;
     observeReveals();
   }
 

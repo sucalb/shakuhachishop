@@ -13,7 +13,7 @@ const DEFAULTS = {
     { src: "assets/komuso.jpg", focus: "50% 30%" },
   ],
 
-  // The three collections. Ids are fixed; text and cover photo are editable.
+  // The collections, in menu order. Ids are fixed; text and cover photo are editable.
   collections: [
     {
       id: "edo",
@@ -38,6 +38,22 @@ const DEFAULTS = {
       text: "Tuned-bore Shakuhachi for Kinko, Tozan and modern playing. Stable pitch, strong voice, ready for lessons and the stage.",
       cta: "Browse by length",
       image: "assets/seien.jpg",
+    },
+    {
+      id: "wood",
+      kicker: "Wood & resin",
+      title: "Wood and Yuu Shakuhachi",
+      text: "Wooden Shakuhachi and the resin Yuu: stable, affordable instruments for beginners, travel and practice.",
+      cta: "See wood and Yuu",
+      image: "",
+    },
+    {
+      id: "bamboo",
+      kicker: "For makers",
+      title: "Bamboo for Shakuhachi making",
+      text: "Selected madake bamboo with the root end, ready for making your own Shakuhachi.",
+      cta: "See the bamboo",
+      image: "",
     },
   ],
 

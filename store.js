@@ -97,7 +97,12 @@ const Store = (() => {
       if (error) throw error;
       data.forEach((row) => (saved[row.key] = row.value));
     }
-    return { ...clone(DEFAULTS), ...saved };
+    const merged = { ...clone(DEFAULTS), ...saved };
+    if (saved.collections) {
+      const have = new Set(saved.collections.map((c) => c.id));
+      merged.collections = [...saved.collections, ...clone(DEFAULTS.collections).filter((c) => !have.has(c.id))];
+    }
+    return merged;
   }
 
   async function saveSetting(key, value) {

@@ -6,7 +6,7 @@ create table if not exists public.flutes (
   name        text not null default '',
   maker       text not null default '',
   length      text not null default '',                 -- "1.8"
-  collection  text not null default 'jiari' check (collection in ('edo', 'jinashi', 'jiari')),
+  collection  text not null default 'jiari' check (collection in ('edo', 'jinashi', 'jiari', 'wood', 'bamboo')),
   price       numeric,
   status      text not null default 'available' check (status in ('available', 'reserved', 'sold')),
   images      jsonb not null default '[]'::jsonb,       -- ["https://...jpg", ...], ảnh đầu là ảnh bìa

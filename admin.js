@@ -3,7 +3,7 @@
   const tabsEl = document.getElementById("tabs");
   const state = { tab: "flutes", flutes: [], settings: null, filter: "", editing: null, dirty: false };
 
-  const COLLECTION_NAMES = { edo: "Edo Shakuhachi", jinashi: "Jinashi Shakuhachi", jiari: "Jiari Shakuhachi" };
+  const COLLECTION_NAMES = { edo: "Edo Shakuhachi", jinashi: "Jinashi Shakuhachi", jiari: "Jiari Shakuhachi", wood: "Wood and Yuu Shakuhachi", bamboo: "Bamboo for Shakuhachi making" };
   const STATUS_VI = { available: "Còn hàng", reserved: "Đang giữ", sold: "Đã bán" };
   const STATUS_NEXT = { available: "reserved", reserved: "sold", sold: "available" };
   const FOCUS = [["50% 50%", "Giữa"], ["50% 20%", "Phía trên"], ["50% 80%", "Phía dưới"]];
@@ -399,7 +399,7 @@
     app.innerHTML = `
       <div class="page-head"><div>
         <h1>Danh mục</h1>
-        <p class="muted">Ba mục lớn trên trang chủ. Có thể đổi chữ và ảnh đại diện; tên mục nên giữ bằng tiếng Anh.</p>
+        <p class="muted">Các mục lớn trên trang chủ. Có thể đổi chữ và ảnh đại diện; tên mục nên giữ bằng tiếng Anh.</p>
       </div></div>
       ${cols.map((c, i) => `
         <section class="panel coll" data-i="${i}">
