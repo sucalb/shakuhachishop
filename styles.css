@@ -195,7 +195,7 @@ h1, h2, h3, p, blockquote, figure { margin: 0; }
 .review-list { display: grid; gap: 18px; width: 100%; max-width: 860px; margin-bottom: 44px; }
 .review { padding: 34px 36px 26px 40px; background: rgba(255,255,255,.5); border: 1px solid var(--line); text-align: left; position: relative; display: grid; gap: 8px; }
 .review::before { content: "“"; position: absolute; top: 2px; left: 16px; font: 400 64px/1 var(--display); color: var(--shu); opacity: .5; }
-.review blockquote { margin: 0; font: italic 400 20px/1.55 var(--display); display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden; }
+.review blockquote { margin: 0; white-space: pre-line; font: italic 400 20px/1.55 var(--display); display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden; }
 .review.open blockquote { -webkit-line-clamp: unset; display: block; }
 .more-btn { justify-self: start; background: none; border: 0; padding: 0; font: 500 12px var(--body); letter-spacing: .12em; text-transform: uppercase; color: var(--shu); cursor: pointer; }
 .review figcaption { font-size: 13px; color: var(--muted); letter-spacing: .04em; }

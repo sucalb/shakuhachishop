@@ -34,7 +34,7 @@ function renderChrome() {
     <a class="brand" href="index.html"><span class="seal">尺八</span><b>Old Shakuhachi Shop</b></a>
     <a class="fb-mini" ${ext(S.contact.messenger)} aria-label="Message us on Facebook"><em>Message us</em>${FB_ICON}</a>
     <nav class="nav">
-      <a href="catalogue.html">All flutes <span>尺八</span></a>
+      <a href="catalogue.html">All Shakuhachi <span>尺八</span></a>
       ${S.collections.map((c) => `<a href="catalogue.html?c=${c.id}">${esc(c.title)} <span>${NAV_JP[c.id] || ""}</span></a>`).join("")}
       <a href="index.html#reviews">Reviews <span>評</span></a>
       <a ${ext(S.contact.facebook)}>Facebook <span>連絡</span></a>
@@ -51,7 +51,7 @@ function renderChrome() {
   $("[data-footer]").innerHTML = `
     <div class="foot-inner on-dark">
       <p class="foot-title">Old Shakuhachi Shop</p>
-      <p class="foot-sub">To buy a flute or ask a question, send us a message.</p>
+      <p class="foot-sub">To buy a Shakuhachi or ask a question, send us a message.</p>
       <a class="btn" ${ext(S.contact.messenger)}>${FB_ICON} Message us on Facebook</a>
       <div class="foot-bottom">
         <span class="brand-mini"><span class="seal">尺八</span> Old Shakuhachi Shop</span>
@@ -110,7 +110,7 @@ function renderCollections() {
           <p class="kicker">${esc(c.kicker)}</p>
           <h2 class="title">${esc(c.title)}</h2>
           <p>${esc(c.text)}</p>
-          <p class="count">${count ? `${count} ${count === 1 ? "flute" : "flutes"} available` : "New flutes coming soon"}</p>
+          <p class="count">${count ? `${count} Shakuhachi available` : "New Shakuhachi coming soon"}</p>
           ${lengths}
           <a class="btn" href="catalogue.html?c=${c.id}">${esc(c.cta)}</a>
         </div>
@@ -183,8 +183,8 @@ function renderCatalogue() {
     const c = S.collections.find((x) => x.id === current);
     const g = current === "jiari" ? lengthGroup(length) : null;
     $("#cat-kicker").textContent = c ? c.kicker : "Catalogue";
-    $("#cat-title").textContent = g ? g.title : c ? c.title : "All Flutes";
-    $("#cat-text").textContent = c ? c.text : "Every flute currently in the shop.";
+    $("#cat-title").textContent = g ? g.title : c ? c.title : "All Shakuhachi";
+    $("#cat-text").textContent = c ? c.text : "Every Shakuhachi currently in the shop.";
     document.title = `${g ? g.title : c ? c.title : "Catalogue"} – Old Shakuhachi Shop`;
 
     $("#tabs").innerHTML = tabs.map((t) =>
@@ -199,7 +199,7 @@ function renderCatalogue() {
       (!current || f.collection === current) && (!g || g.match(parseFloat(f.length))));
     $("#grid").innerHTML = list.length
       ? list.map(card).join("")
-      : `<div class="empty"><b>${GHOST[current] || "尺八"}</b><p>No flutes here right now. New ones are added regularly.</p><a class="btn" ${ext(S.contact.messenger)}>Tell us what you are looking for</a></div>`;
+      : `<div class="empty"><b>${GHOST[current] || "尺八"}</b><p>No Shakuhachi here right now. New ones are added regularly.</p><a class="btn" ${ext(S.contact.messenger)}>Tell us what you are looking for</a></div>`;
     observeReveals();
   }
 
@@ -220,7 +220,7 @@ function renderFlute() {
   const f = FLUTES.find((x) => x.id === params.get("id"));
   const el = $("#flute");
   if (!f) {
-    el.innerHTML = `<div class="empty"><b>尺八</b><p>This flute could not be found. It may have been sold.</p><a class="btn" href="catalogue.html">See all flutes</a></div>`;
+    el.innerHTML = `<div class="empty"><b>尺八</b><p>This Shakuhachi could not be found. It may have been sold.</p><a class="btn" href="catalogue.html">See all Shakuhachi</a></div>`;
     return;
   }
   const c = S.collections.find((x) => x.id === f.collection);
