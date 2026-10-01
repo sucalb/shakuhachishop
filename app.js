@@ -130,7 +130,7 @@ function renderScale() {
   const max = parseFloat(lengths[lengths.length - 1]);
   $("#scale").innerHTML = lengths.map((l) => `
     <li class="${l === "1.8" ? "std" : ""}">
-      <i style="height:${(parseFloat(l) / max) * 180}px"></i>
+      <img src="assets/flute-scale.png" alt="" style="--h:${(parseFloat(l) / max).toFixed(3)}">
       <b>${l}</b><small>${PITCH[l]}</small>
     </li>`).join("");
 }
