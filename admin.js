@@ -240,7 +240,7 @@
 
         <section class="panel">
           <h2>Hình ảnh</h2>
-          <p class="muted">Ảnh đầu tiên là ảnh bìa. Dùng mũi tên để đổi thứ tự. Ảnh được tự thu nhỏ khi tải lên.</p>
+          <p class="muted">Đăng được nhiều ảnh, nên 5–10 ảnh: toàn thân sáo, đầu thổi (utaguchi), các lỗ bấm, phần gốc, chữ khắc, chỗ đã sửa. Ảnh đầu tiên là ảnh bìa; dùng mũi tên để đổi thứ tự. Ảnh được tự thu nhỏ khi tải lên.</p>
           <div class="images" id="images"></div>
           ${dropzone("dropzone")}
         </section>
@@ -365,24 +365,14 @@
   // ---------- Ảnh trang chủ ----------
   function renderHero() {
     const hero = JSON.parse(JSON.stringify(state.settings.hero || []));
-    const listen = { ...(state.settings.listen || {}) };
     app.innerHTML = `
       <div class="page-head"><div>
-        <h1>Trang chủ</h1>
+        <h1>Ảnh trang chủ</h1>
         <p class="muted">Ảnh lớn toàn màn hình khi khách vừa vào web. Có nhiều ảnh thì sẽ tự chuyển qua lại. Nên dùng ảnh ngang, đẹp, rõ nét; chữ 尺八 sẽ hiện đè ở giữa ảnh.</p>
       </div></div>
       <section class="panel">
         <div class="images" id="heroImages"></div>
         ${dropzone("heroDrop", "“Vùng giữ” chọn phần ảnh luôn được nhìn thấy khi màn hình bị cắt (điện thoại).")}
-      </section>
-      <section class="panel">
-        <h2>Video giới thiệu</h2>
-        <p class="muted">Hiện trong phần “The way of the bamboo” trên trang chủ. Để trống link thì ẩn đi.</p>
-        <label>Link YouTube<input id="listenUrl" value="${esc(listen.youtube)}" placeholder="https://www.youtube.com/watch?v=…"></label>
-        <div class="grid">
-          <label>Tên bài<input id="listenTitle" value="${esc(listen.title)}" placeholder="VD: Kyorei"></label>
-          <label>Chú thích (tiếng Anh)<input id="listenCaption" value="${esc(listen.caption)}"></label>
-        </div>
       </section>
       ${saveBar("saveHero")}`;
     const draw = () => renderImageGrid(document.getElementById("heroImages"), hero, {
@@ -397,12 +387,9 @@
       if (s) hero[Number(s.dataset.focus)].focus = s.value;
     });
     wireDropzone(document.getElementById("heroDrop"), (src) => { hero.push({ src, focus: "50% 50%" }); draw(); });
-    document.getElementById("saveHero").onclick = async (e) => {
+    document.getElementById("saveHero").onclick = (e) => {
       if (!hero.length) return toast("Cần ít nhất 1 ảnh.", true);
-      const v = { youtube: document.getElementById("listenUrl").value.trim(), title: document.getElementById("listenTitle").value.trim(), caption: document.getElementById("listenCaption").value.trim() };
-      if (v.youtube && !ytId(v.youtube)) return toast("Link YouTube chưa đúng.", true);
-      await saveSetting("hero", hero, e.target);
-      await saveSetting("listen", v, e.target);
+      saveSetting("hero", hero, e.target);
     };
   }
 
@@ -461,7 +448,7 @@
     app.innerHTML = `
       <div class="page-head"><div>
         <h1>Đánh giá</h1>
-        <p class="muted">Hiện ở cuối trang chủ, kèm nút dẫn sang <a href="${esc(contact.reviews)}" target="_blank" rel="noopener">trang đánh giá trên Facebook</a>. Chép vài đánh giá hay nhất từ Facebook vào đây.</p>
+        <p class="muted">Hiện ở cuối trang chủ, kèm nút dẫn sang <a href="${esc(contact.reviews)}" target="_blank" rel="noopener">trang đánh giá trên Facebook</a>. Chép khoảng 6–10 đánh giá hay nhất từ Facebook vào đây; trên web chúng hiện thành một dải trượt ngang, đánh giá dài có nút “Read more”.</p>
       </div></div>
       <section class="panel">
         <h2>Tổng quan (lấy từ tab Đánh giá trên Facebook)</h2>

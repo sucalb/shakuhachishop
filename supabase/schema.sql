@@ -18,9 +18,9 @@ create table if not exists public.flutes (
   updated_at  timestamptz not null default now()
 );
 
--- 2. Cài đặt trang: ảnh và video trang chủ, danh mục, đánh giá, liên hệ (mỗi mục một dòng key/value)
+-- 2. Cài đặt trang: ảnh trang chủ, danh mục, đánh giá, liên hệ (mỗi mục một dòng key/value)
 create table if not exists public.site_settings (
-  key        text primary key check (key in ('hero', 'listen', 'collections', 'reviewSummary', 'reviews', 'contact')),
+  key        text primary key check (key in ('hero', 'collections', 'reviewSummary', 'reviews', 'contact')),
   value      jsonb not null,
   updated_at timestamptz not null default now()
 );

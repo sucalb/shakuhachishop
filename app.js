@@ -36,7 +36,6 @@ function renderChrome() {
     <nav class="nav">
       <a href="catalogue.html">All flutes <span>尺八</span></a>
       ${S.collections.map((c) => `<a href="catalogue.html?c=${c.id}">${esc(c.title)} <span>${NAV_JP[c.id] || ""}</span></a>`).join("")}
-      <a href="index.html#way">The way of the bamboo <span>一音成仏</span></a>
       <a href="index.html#reviews">Reviews <span>評</span></a>
       <a ${ext(S.contact.facebook)}>Facebook <span>連絡</span></a>
     </nav>`;
@@ -131,9 +130,11 @@ function renderScale() {
 }
 
 function renderReviews() {
-  const quotes = (S.reviews || []).filter((r) => r.text).map((r) => `
+  const list = (S.reviews || []).filter((r) => r.text);
+  const quotes = list.map((r) => `
     <figure class="review">
       <blockquote>${esc(r.text)}</blockquote>
+      <button type="button" class="more-btn" hidden>Read more</button>
       <figcaption>${esc(r.name)}${r.date ? ` · ${esc(r.date)}` : ""}</figcaption>
     </figure>`).join("");
   const sum = S.reviewSummary || {};
@@ -144,25 +145,33 @@ function renderReviews() {
       <strong>${esc(sum.recommend)}</strong>
       <span>recommend us on Facebook<br>${esc(sum.count)} reviews</span>
     </a>` : ""}
-    ${quotes ? `<div class="review-list">${quotes}</div>` : ""}
+    ${quotes ? `<div class="review-rail ${list.length < 3 ? "few" : ""}">
+      <div class="review-track" tabindex="0" aria-label="Reviews">${quotes}</div>
+      ${list.length > 2 ? `<div class="rail-nav"><button type="button" class="nav-btn prev" aria-label="Previous reviews">‹</button>
+      <button type="button" class="nav-btn next" aria-label="Next reviews">›</button></div>` : ""}
+    </div>` : ""}
     <a class="btn" ${ext(S.contact.reviews)}>Read all reviews on Facebook</a>`;
-}
 
-function renderListen() {
-  const el = $("#listen");
-  const l = S.listen || {};
-  const vid = youtubeId(l.youtube);
-  if (!vid) return el.remove();
-  el.innerHTML = `
-    <p class="kicker">Listen</p>
-    <h3>${esc(l.title)}</h3>
-    ${l.caption ? `<p>${esc(l.caption)}</p>` : ""}
-    <div class="yt"><iframe src="https://www.youtube-nocookie.com/embed/${vid}" title="${esc(l.title)}" loading="lazy" allow="accelerometer; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>`;
+  const track = $(".review-track");
+  if (!track) return;
+  // Long reviews are clamped; show "Read more" only where text is actually cut.
+  track.querySelectorAll(".review").forEach((card) => {
+    const q = $("blockquote", card), more = $(".more-btn", card);
+    if (q.scrollHeight > q.clientHeight + 4) more.hidden = false;
+    more.onclick = () => {
+      const open = card.classList.toggle("open");
+      more.textContent = open ? "Show less" : "Read more";
+    };
+  });
+  const step = () => (track.querySelector(".review")?.offsetWidth || 300) + 24;
+  $("#reviews").addEventListener("click", (e) => {
+    if (e.target.closest(".review-rail .prev")) track.scrollBy({ left: -step(), behavior: "smooth" });
+    if (e.target.closest(".review-rail .next")) track.scrollBy({ left: step(), behavior: "smooth" });
+  });
 }
 
 function renderHome() {
   renderHero();
-  renderListen();
   renderCollections();
   renderScale();
   renderReviews();
@@ -229,13 +238,17 @@ function renderFlute() {
   document.title = `${f.name} – TranCao Shakuhachi`;
   const imgs = (f.images || []).map(safeImg).filter(Boolean);
   const vid = youtubeId(f.youtube);
-  const thumbs = imgs.length > 1
-    ? `<div class="thumbs">${imgs.map((src, i) => `<img src="${src}" alt="" class="${i ? "" : "on"}">`).join("")}</div>`
-    : "";
+  const many = imgs.length > 1;
   el.innerHTML = `
     <div class="gallery">
-      ${imgs[0] ? `<img class="main" src="${imgs[0]}" alt="${esc(f.name)}">` : `<div class="main ph-empty"><b>尺八</b></div>`}
-      ${thumbs}
+      <div class="stage">
+        ${imgs[0] ? `<img class="main" src="${imgs[0]}" alt="${esc(f.name)}, photo 1">` : `<div class="main ph-empty"><b>尺八</b></div>`}
+        ${many ? `<button type="button" class="nav-btn prev" aria-label="Previous photo">‹</button>
+        <button type="button" class="nav-btn next" aria-label="Next photo">›</button>
+        <span class="counter">1 / ${imgs.length}</span>` : ""}
+        ${imgs[0] ? `<button type="button" class="zoom" aria-label="View full screen">⤢</button>` : ""}
+      </div>
+      ${many ? `<div class="thumbs">${imgs.map((src, i) => `<button type="button" data-i="${i}" class="${i ? "" : "on"}" aria-label="Photo ${i + 1}"><img src="${src}" alt="" loading="lazy"></button>`).join("")}</div>` : ""}
       <section class="video">
         <p class="kicker">Hear it played</p>
         ${vid
@@ -259,12 +272,67 @@ function renderFlute() {
         <p class="small">Mention “${esc(f.name)}” in your message. Price, shipping and payment are arranged directly with us.</p>`}
     </div>`;
 
+  if (imgs.length) setupGallery(el, imgs, f.name);
+}
+
+// Main photo with arrows, thumbnails, swipe, and a full-screen viewer.
+function setupGallery(el, imgs, name) {
+  let i = 0;
+  const main = $(".main", el);
+  const counter = $(".counter", el);
+  const box = document.createElement("dialog");
+  box.className = "lightbox";
+  box.innerHTML = `
+    <img alt="">
+    <button type="button" class="lb-close" aria-label="Close">×</button>
+    ${imgs.length > 1 ? `<button type="button" class="nav-btn prev" aria-label="Previous photo">‹</button><button type="button" class="nav-btn next" aria-label="Next photo">›</button>` : ""}
+    <span class="counter"></span>`;
+  document.body.appendChild(box);
+  const big = $("img", box);
+
+  function show(n) {
+    i = (n + imgs.length) % imgs.length;
+    main.src = imgs[i];
+    main.alt = `${name}, photo ${i + 1}`;
+    big.src = imgs[i];
+    if (counter) counter.textContent = `${i + 1} / ${imgs.length}`;
+    $(".counter", box).textContent = imgs.length > 1 ? `${i + 1} / ${imgs.length}` : "";
+    el.querySelectorAll(".thumbs button").forEach((b) => b.classList.toggle("on", Number(b.dataset.i) === i));
+    const on = $(".thumbs .on", el);
+    if (on) on.scrollIntoView({ block: "nearest", inline: "nearest" });
+    // Preload the neighbours so arrows feel instant.
+    [i + 1, i - 1].forEach((k) => { new Image().src = imgs[(k + imgs.length) % imgs.length]; });
+  }
+
   el.addEventListener("click", (e) => {
-    const t = e.target.closest(".thumbs img");
-    if (!t) return;
-    $(".main", el).src = t.src;
-    el.querySelectorAll(".thumbs img").forEach((img) => img.classList.toggle("on", img === t));
+    const t = e.target.closest(".thumbs button");
+    if (t) return show(Number(t.dataset.i));
+    if (e.target.closest(".stage .prev")) return show(i - 1);
+    if (e.target.closest(".stage .next")) return show(i + 1);
+    if (e.target.closest(".zoom") || e.target === main) box.showModal();
   });
+  box.addEventListener("click", (e) => {
+    if (e.target.closest(".prev")) return show(i - 1);
+    if (e.target.closest(".next")) return show(i + 1);
+    if (e.target.closest(".lb-close") || e.target === box) box.close();
+  });
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "ArrowLeft") show(i - 1);
+    if (e.key === "ArrowRight") show(i + 1);
+  });
+
+  // Swipe left/right on touch screens.
+  [main, big].forEach((target) => {
+    let x0 = null;
+    target.addEventListener("touchstart", (e) => (x0 = e.touches[0].clientX), { passive: true });
+    target.addEventListener("touchend", (e) => {
+      if (x0 === null) return;
+      const dx = e.changedTouches[0].clientX - x0;
+      if (Math.abs(dx) > 40) show(dx < 0 ? i + 1 : i - 1);
+      x0 = null;
+    });
+  });
+  show(0);
 }
 
 // ---------- Fade-in on scroll ----------

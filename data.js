@@ -13,13 +13,6 @@ const DEFAULTS = {
     { src: "assets/komuso.jpg", focus: "50% 30%" },
   ],
 
-  // Video shown in "The way of the bamboo" section on the home page.
-  listen: {
-    youtube: "https://www.youtube.com/watch?v=ksansOKZkDo",
-    title: "Kyorei",
-    caption: "One of the oldest pieces of the Fuke tradition, performed by Christopher Yohmei Blasdel.",
-  },
-
   // The three collections. Ids are fixed; text and cover photo are editable.
   collections: [
     {
@@ -85,7 +78,7 @@ const SEED_FLUTES = [
     collection: "edo",
     price: 1200,
     status: "available",
-    images: ["assets/edo-antique.jpg"],
+    images: ["assets/edo-antique.jpg", "assets/edo-antique-2.jpg", "assets/edo-antique-3.jpg", "assets/edo-antique-4.jpg"],
     youtube: "https://www.youtube.com/watch?v=ksansOKZkDo",
     description: "Sample listing. Replace with a real flute from the shop.\nAn old flute with a deep, warm patina and a metal band at the joint, shown on a display stand.\nThe video is a recording of the honkyoku Kyorei for reference.",
     sample: true,
@@ -99,7 +92,7 @@ const SEED_FLUTES = [
     collection: "edo",
     price: 950,
     status: "sold",
-    images: ["assets/edo-met.jpg"],
+    images: ["assets/edo-met.jpg", "assets/edo-met-2.jpg", "assets/edo-met-3.jpg"],
     youtube: "",
     description: "Sample listing. Replace with a real flute from the shop.\nA plain old flute with thread binding near the mouthpiece and a separate end cap.",
     sample: true,
@@ -113,7 +106,7 @@ const SEED_FLUTES = [
     collection: "jinashi",
     price: 480,
     status: "available",
-    images: ["assets/jinashi.jpg"],
+    images: ["assets/jinashi.jpg", "assets/jinashi-2.jpg", "assets/jinashi-3.jpg"],
     youtube: "https://www.youtube.com/watch?v=DOoWrAKQ_2Y",
     description: "Sample listing. Replace with a real flute from the shop.\nNatural bore, light honey-coloured bamboo with root end and binding at the nodes.\nThe video is a recording of Shika no Tōne for reference.",
     sample: true,
@@ -127,7 +120,7 @@ const SEED_FLUTES = [
     collection: "jinashi",
     price: 650,
     status: "reserved",
-    images: ["assets/jinashi-bound.jpg"],
+    images: ["assets/jinashi-bound.jpg", "assets/jinashi-bound-2.jpg", "assets/jinashi-bound-3.jpg"],
     youtube: "https://www.youtube.com/watch?v=4jzH55i5a4U",
     description: "Sample listing. Replace with a real flute from the shop.\nA long, dark bamboo flute with rattan binding along its length. Deep and slow to speak.",
     sample: true,

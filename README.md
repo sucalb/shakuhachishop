@@ -4,7 +4,7 @@ Web bán sáo shakuhachi, giao diện tiếng Anh, không có thanh toán: khác
 
 | File | Vai trò |
 |---|---|
-| `index.html` | Trang chủ: ảnh lớn, giới thiệu, văn hoá shakuhachi, 3 danh mục, bảng độ dài, đánh giá |
+| `index.html` | Trang chủ: ảnh lớn, giới thiệu, 3 danh mục, bảng độ dài, đánh giá |
 | `catalogue.html?c=jiari&l=1.8` | Danh sách sáo, lọc theo danh mục và (với Jiari) theo độ dài |
 | `flute.html?id=...` | Chi tiết một cây sáo: ảnh, video YouTube, nút nhắn tin |
 | `admin.html` | Trang quản trị cho chủ shop (tiếng Việt) |
@@ -26,7 +26,7 @@ Khi `config.js` còn trống, web chạy **chế độ demo**: thay đổi trong
 ## Trang quản trị làm được gì
 
 - **Sáo**: thêm / sửa / xoá, tải nhiều ảnh, dán link YouTube, chọn danh mục, độ dài, giá, trạng thái (Còn hàng / Đang giữ / Đã bán), sắp xếp thứ tự.
-- **Trang chủ**: tải ảnh lớn cho màn hình đầu (nhiều ảnh thì tự chuyển), đổi video giới thiệu.
+- **Ảnh trang chủ**: tải ảnh lớn cho màn hình đầu, nhiều ảnh thì tự chuyển.
 - **Danh mục**: sửa chữ và ảnh đại diện của Edo / Jinashi / Jiari.
 - **Đánh giá**: tỉ lệ đề xuất, số đánh giá, chép các đánh giá hay từ Facebook.
 - **Liên hệ**: link trang Facebook, Messenger, trang đánh giá.
@@ -60,8 +60,7 @@ Bốn sản phẩm có nhãn **Sample** chỉ để trang trí; khi có sáo th�
 | `assets/hero.jpg`, `assets/seien.jpg`, `assets/logo.png` | shakuhachishop.com (của khách) | |
 | `assets/edo-antique.jpg`, `assets/jinashi.jpg` | Ảnh do người làm web cung cấp, chưa rõ nguồn: nên thay bằng ảnh của khách | ? |
 | `assets/komuso.jpg` | [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Komuso_(monk)_of_Japan_-_shakuhachi_players_-_MIM_PHX_(2014-02-09_13.28.31_by_ksblack99).jpg) | Public domain |
-| `assets/kuniyoshi.jpg` | [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Shakuhachi_player.jpg), Utagawa Kuniyoshi | Public domain |
 | `assets/edo-met.jpg` | [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Shakuhachi_MET_142073.jpg), The Met | CC0 |
 | `assets/jinashi-bound.jpg` | [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Shakuhachi_thumbhole.jpg) | Public domain |
 
-Video YouTube nhúng (Kyorei, Shika no Tōne, Tsukiyo no Kenshi) là các bản biểu diễn của Christopher Yohmei Blasdel và Riley Lee Music, không phải tiếng của sáo đang bán.
+Video YouTube trong sản phẩm mẫu (Kyorei, Shika no Tōne, Tsukiyo no Kenshi) là các bản biểu diễn của Christopher Yohmei Blasdel và Riley Lee Music, không phải tiếng của sáo đang bán.
