@@ -6,7 +6,6 @@ const safeUrl = (u) => (/^https:\/\//.test(u || "") ? esc(u) : "#");
 const money = (n) => (n || n === 0) && n !== "" ? "$" + Number(n).toLocaleString("en-US") : "Price on request";
 const params = new URLSearchParams(location.search);
 const STATUS = { available: "Available", reserved: "On hold", sold: "Sold" };
-const GHOST = { edo: "江戸", jinashi: "地無", jiari: "地有", wood: "木", bamboo: "竹" };
 const pitchOf = (f) => (PITCH[f.length] ? ` · ${PITCH[f.length]}` : "");
 const lengthGroup = (id) => JIARI_LENGTHS.find((g) => g.id === id);
 const paragraphs = (t) => String(t || "").split(/\n+/).map((s) => s.trim()).filter(Boolean);
@@ -38,7 +37,7 @@ function renderChrome() {
   const header = $("[data-header]");
   header.innerHTML = `
     <button class="burger" aria-label="Menu" aria-expanded="false"><i></i><em>Menu</em></button>
-    <a class="brand" href="index.html"><span class="seal">尺八</span><b>Old Shakuhachi Shop</b></a>
+    <a class="brand" href="index.html"><img class="brand-logo" src="assets/favicon-192.png" alt="" width="34" height="34"><b>Old Shakuhachi Shop</b></a>
     <a class="fb-mini" ${ext(S.contact.messenger)} aria-label="Message us on Facebook"><em>Message us</em>${FB_ICON}</a>
     <nav class="nav">
       <a href="catalogue.html">All Shakuhachi</a>
@@ -62,7 +61,7 @@ function renderChrome() {
       <a class="btn" ${ext(S.contact.messenger)}>${FB_ICON} Message us on Facebook</a>
       ${phoneLink("foot-phone")}
       <div class="foot-bottom">
-        <span class="brand-mini"><span class="seal">尺八</span> Old Shakuhachi Shop</span>
+        <span class="brand-mini"><img class="brand-logo" src="assets/favicon-192.png" alt="" width="26" height="26"> Old Shakuhachi Shop</span>
         <nav class="foot-links">
           <a href="catalogue.html">Catalogue</a>
           <a ${ext(S.contact.facebook)}>Facebook page</a>
@@ -107,7 +106,7 @@ function renderCollections() {
     const count = FLUTES.filter((f) => f.collection === c.id && f.status !== "sold").length;
     const img = safeImg(c.image)
       ? `<img src="${safeImg(c.image)}" alt="${esc(c.title)}" loading="lazy">`
-      : `<div class="ph-empty"><b>${GHOST[c.id] || ""}</b></div>`;
+      : `<div class="ph-empty">Photos coming soon</div>`;
     const lengths = c.id === "jiari"
       ? `<p class="len-links">${JIARI_LENGTHS.map((g) => `<a href="catalogue.html?c=jiari&l=${g.id}">${g.title.replace(" Shakuhachi", "")}</a>`).join("")}</p>`
       : "";
@@ -257,7 +256,7 @@ function renderCatalogue() {
       (!current || f.collection === current) && (!g || g.match(parseFloat(f.length))));
     $("#grid").innerHTML = list.length
       ? list.map(card).join("")
-      : `<div class="empty"><b>${GHOST[current] || "尺八"}</b><p>Nothing here right now. New items are added regularly.</p><a class="btn" ${ext(S.contact.messenger)}>Tell us what you are looking for</a></div>`;
+      : `<div class="empty"><p>Nothing here right now. New items are added regularly.</p><a class="btn" ${ext(S.contact.messenger)}>Tell us what you are looking for</a></div>`;
     observeReveals();
   }
 
@@ -278,7 +277,7 @@ function renderFlute() {
   const f = FLUTES.find((x) => x.id === params.get("id"));
   const el = $("#flute");
   if (!f) {
-    el.innerHTML = `<div class="empty"><b>尺八</b><p>This Shakuhachi could not be found. It may have been sold.</p><a class="btn" href="catalogue.html">See all Shakuhachi</a></div>`;
+    el.innerHTML = `<div class="empty"><p>This Shakuhachi could not be found. It may have been sold.</p><a class="btn" href="catalogue.html">See all Shakuhachi</a></div>`;
     return;
   }
   const c = S.collections.find((x) => x.id === f.collection);
@@ -289,7 +288,7 @@ function renderFlute() {
   el.innerHTML = `
     <div class="gallery">
       <div class="stage">
-        ${imgs[0] ? `<img class="main" src="${imgs[0]}" alt="${esc(f.name)}, photo 1">` : `<div class="main ph-empty"><b>尺八</b></div>`}
+        ${imgs[0] ? `<img class="main" src="${imgs[0]}" alt="${esc(f.name)}, photo 1">` : `<div class="main ph-empty">Photos coming soon</div>`}
         ${many ? `<button type="button" class="nav-btn prev" aria-label="Previous photo">‹</button>
         <button type="button" class="nav-btn next" aria-label="Next photo">›</button>
         <span class="counter">1 / ${imgs.length}</span>` : ""}

@@ -372,7 +372,7 @@
     app.innerHTML = `
       <div class="page-head"><div>
         <h1>Ảnh trang chủ</h1>
-        <p class="muted">Ảnh lớn toàn màn hình khi khách vừa vào web. Có nhiều ảnh thì sẽ tự chuyển qua lại. Nên dùng ảnh ngang, đẹp, rõ nét; chữ 尺八 sẽ hiện đè ở giữa ảnh.</p>
+        <p class="muted">Ảnh lớn toàn màn hình khi khách vừa vào web. Có nhiều ảnh thì sẽ tự chuyển qua lại. Nên dùng ảnh ngang, đẹp, rõ nét; tên shop sẽ hiện ở giữa.</p>
       </div></div>
       <section class="panel">
         <div class="images" id="heroImages"></div>
