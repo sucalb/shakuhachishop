@@ -155,6 +155,48 @@
         "date": "August 2024",
         "text": "I bought two shakuhachi and I am 100% satisfied. Friendly and competent seller, excellent international service and quality guaranteed, at a very reasonable price."
       }
+    ],
+    "collections": [
+      {
+        "id": "edo",
+        "kicker": "Edo period",
+        "title": "Edo Shakuhachi",
+        "text": "Old Shakuhachi were made and played by monks during the Edo period. Each one has a unique sound.",
+        "cta": "Explore the old Shakuhachi",
+        "image": "assets/edo-cover.jpg"
+      },
+      {
+        "id": "jinashi",
+        "kicker": "Natural bore",
+        "title": "Jinashi Shakuhachi",
+        "text": "Bamboo left as it grew, without paste in the bore. Breathy and earthy, for honkyoku and meditation.",
+        "cta": "Choose your sound",
+        "image": "uploads/2026-10-01-y7t1w0.jpg"
+      },
+      {
+        "id": "jiari",
+        "kicker": "Contemporary",
+        "title": "Jiari Shakuhachi",
+        "text": "Tuned-bore Shakuhachi for Kinko, Tozan and modern playing. Stable pitch, strong voice, ready for lessons and the stage.",
+        "cta": "Browse by length",
+        "image": "assets/seien.jpg"
+      },
+      {
+        "id": "wood",
+        "kicker": "Wood & resin",
+        "title": "Wood and Yuu Shakuhachi",
+        "text": "Wooden Shakuhachi and the resin Yuu: stable, affordable instruments for beginners, travel and practice.",
+        "cta": "See wood and Yuu",
+        "image": ""
+      },
+      {
+        "id": "bamboo",
+        "kicker": "For makers",
+        "title": "Bamboo for Shakuhachi making",
+        "text": "Selected madake bamboo with the root end, ready for making your own Shakuhachi.",
+        "cta": "See the bamboo",
+        "image": ""
+      }
     ]
   }
 }
