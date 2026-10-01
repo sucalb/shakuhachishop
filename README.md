@@ -44,12 +44,21 @@ Khi `config.js` còn trống, web chạy **chế độ demo**: thay đổi trong
 
 Lưu ý: gói miễn phí của Supabase tạm dừng project nếu không có truy cập nào trong 7 ngày; khi đó vào dashboard bấm **Restore**. Web có khách ghé thường xuyên thì không bị.
 
-## Đưa lên shakuhachishop.com
+## Tên miền shakuhachishop.com
 
-Tên miền đăng ký ở Nhân Hòa, đang trỏ về hosting HostGator. Hai cách:
+Web chạy trên **GitHub Pages** (nhánh `main`, file `CNAME`), https do GitHub tự cấp và gia hạn. Mỗi lần push lên `main`, khoảng 1 phút sau web tự cập nhật.
 
-- **Dùng HostGator đang có**: vào cPanel → File Manager → `public_html`, sao lưu rồi xoá WordPress cũ, upload toàn bộ thư mục này. Không cần đổi DNS.
-- **Dùng hosting tĩnh miễn phí** (Netlify / Cloudflare Pages): upload thư mục, thêm tên miền, rồi sửa bản ghi A / CNAME ở Nhân Hòa theo hướng dẫn của nơi đó.
+DNS quản lý ở Nhân Hòa (customer.nhanhoa.com → Quản lý dịch vụ → Tên miền → DNS Record):
+
+| Loại | Tên | Giá trị |
+|---|---|---|
+| A | @ | 185.199.108.153 |
+| A | @ | 185.199.109.153 |
+| A | @ | 185.199.110.153 |
+| A | @ | 185.199.111.153 |
+| CNAME | www | sucalb.github.io |
+
+Hosting HostGator (WordPress cũ) không còn được dùng.
 
 ## Ảnh và video mẫu
 
