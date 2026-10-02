@@ -67,8 +67,11 @@ DNS quản lý ở Nhân Hòa (customer.nhanhoa.com → Quản lý dịch vụ �
 | A | @ | 185.199.110.153 |
 | A | @ | 185.199.111.153 |
 | CNAME | www | sucalb.github.io |
+| TXT | @ | google-site-verification=… (Google Search Console, **đừng xoá**) |
 
 Hosting HostGator (WordPress cũ) không còn được dùng.
+
+Google Search Console đã xác minh tên miền (bản ghi TXT ở trên); sitemap là `sitemap.xml`.
 
 ## Ảnh và video mẫu
 
