@@ -56,7 +56,9 @@ Mật khẩu nên dài (≥ 10 ký tự, không phải chữ đơn giản) vì a
 
 ## Tên miền shakuhachishop.com
 
-Web chạy trên **GitHub Pages** (nhánh `main`, file `CNAME`), https do GitHub tự cấp và gia hạn. Mỗi lần push lên `main`, khoảng 1 phút sau web tự cập nhật.
+Web chạy trên **GitHub Pages**, đăng bằng GitHub Actions (`.github/workflows/pages.yml`): mỗi lần push lên `main` (kể cả khi khách bấm Lưu trong trang quản trị), `scripts/build.mjs` tạo thêm một trang tĩnh cho từng cây sáo (`shakuhachi-<id>.html`, có sẵn tên, giá, ảnh và dữ liệu sản phẩm cho Google) và `sitemap.xml`, rồi đăng lên. Khoảng 1 phút sau web tự cập nhật. https do GitHub tự cấp và gia hạn.
+
+Xem thử bản đã dựng trên máy: `node scripts/build.mjs` rồi mở thư mục `_site/`.
 
 DNS quản lý ở Nhân Hòa (customer.nhanhoa.com → Quản lý dịch vụ → Tên miền → DNS Record):
 

@@ -5,6 +5,9 @@ const safeImg = (u) => (/^(https:\/\/|assets\/|uploads\/|data:image\/(jpeg|png|w
 const safeUrl = (u) => (/^https:\/\//.test(u || "") ? esc(u) : "#");
 const money = (n) => (n || n === 0) && n !== "" ? "$" + Number(n).toLocaleString("en-US") : "Price on request";
 const params = new URLSearchParams(location.search);
+// On the published site every Shakuhachi has its own static page (built by scripts/build.mjs).
+const PRERENDERED = !!document.querySelector('meta[name="prerendered"]');
+const fluteUrl = (f) => (PRERENDERED ? `shakuhachi-${f.id}.html` : `flute.html?id=${encodeURIComponent(f.id)}`);
 const STATUS = { available: "Available", reserved: "On hold", sold: "Sold" };
 const pitchOf = (f) => (PITCH[f.length] ? ` · ${PITCH[f.length]}` : "");
 const lengthGroup = (id) => JIARI_LENGTHS.find((g) => g.id === id);
@@ -78,7 +81,7 @@ function card(f) {
   const sample = f.sample ? `<span class="tag sample">Sample</span>` : "";
   const cover = safeImg((f.images || [])[0]);
   return `
-    <a class="card reveal" href="flute.html?id=${encodeURIComponent(f.id)}">
+    <a class="card reveal" href="${esc(fluteUrl(f))}">
       <div class="ph">${cover ? `<img src="${cover}" alt="${esc(f.name)}" loading="lazy">` : ""}${status}${video}${sample}</div>
       <h3>${esc(f.name)}</h3>
       <p class="meta">${esc(f.length)} shaku${pitchOf(f)} · ${f.status === "sold" ? "Sold" : money(f.price)}</p>
@@ -274,8 +277,8 @@ function renderCatalogue() {
 
 // ---------- Flute detail ----------
 function renderFlute() {
-  const f = FLUTES.find((x) => x.id === params.get("id"));
   const el = $("#flute");
+  const f = FLUTES.find((x) => x.id === (el.dataset.id || params.get("id")));
   if (!f) {
     el.innerHTML = `<div class="empty"><p>This Shakuhachi could not be found. It may have been sold.</p><a class="btn" href="catalogue.html">See all Shakuhachi</a></div>`;
     return;
