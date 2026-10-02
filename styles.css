@@ -323,7 +323,7 @@ h1, h2, h3, p, blockquote, figure { margin: 0; }
   .len-links a { font-size: 12px; padding: 2px 9px; }
   .coll-body .btn { margin-top: 0; padding: 0; border: 0; background: none; color: var(--shu); font-size: 11px; letter-spacing: .14em; text-align: left; }
   .coll-body .btn::after { content: " →"; }
-  .coll-img img { object-position: 70% 50%; }
+  .coll-img img { object-position: 50% 50%; }
   .title { font-size: 36px; margin-bottom: 12px; }
   .intro { gap: 14px; }
   .intro .lede { font-size: 23px; }
