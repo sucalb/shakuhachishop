@@ -13,7 +13,7 @@
       ],
       "youtube": "",
       "description": "A 1.9 Seien shakuhachi for sale.\nThe utaguchi insert was missing when it came in, so it has been replaced with bull bone.\nThe sound is beautiful. Please watch the video for your reference.\nAsking price is 350 USD plus shipping.",
-      "sort": 1
+      "sort": 2
     },
     {
       "id": "sample-edo-antique",
@@ -32,7 +32,7 @@
       "youtube": "https://www.youtube.com/watch?v=ksansOKZkDo",
       "description": "Sample listing. Replace with a real Shakuhachi from the shop.\nAn old Shakuhachi with a deep, warm patina and a metal band at the joint, shown on a display stand.\nThe video is a recording of the honkyoku Kyorei for reference.",
       "sample": true,
-      "sort": 2
+      "sort": 3
     },
     {
       "id": "sample-edo-komuso",
@@ -50,7 +50,7 @@
       "youtube": "",
       "description": "Sample listing. Replace with a real Shakuhachi from the shop.\nA plain old Shakuhachi with thread binding near the mouthpiece and a separate end cap.",
       "sample": true,
-      "sort": 3
+      "sort": 4
     },
     {
       "id": "sample-jinashi-18",
@@ -68,7 +68,7 @@
       "youtube": "https://www.youtube.com/watch?v=DOoWrAKQ_2Y",
       "description": "Sample listing. Replace with a real Shakuhachi from the shop.\nNatural bore, light honey-coloured bamboo with root end and binding at the nodes.\nThe video is a recording of Shika no Tōne for reference.",
       "sample": true,
-      "sort": 4
+      "sort": 5
     },
     {
       "id": "sample-jinashi-24",
@@ -86,7 +86,7 @@
       "youtube": "https://www.youtube.com/watch?v=4jzH55i5a4U",
       "description": "Sample listing. Replace with a real Shakuhachi from the shop.\nA long, dark bamboo Shakuhachi with rattan binding along its length. Deep and slow to speak.",
       "sample": true,
-      "sort": 5
+      "sort": 6
     },
     {
       "id": "yuu-shakuhachi-for-sale",
@@ -105,7 +105,7 @@
       ],
       "youtube": "",
       "description": "Yuu Shakuhachi for sale.\n\nYuu Shakuhachi is really good for beginners. \nYou can play it for some months and even for years before you want to have a real bamboo Shakuhachi.\nAlso it's good to have one when you travel or you want to play Shakuhachi in harsh environments.\n\nThe asking price is 100 USD plus shipping. \nI often have some Yuu in my stock. Please send me a message if you are looking for one. I will send you pictures and videos of the ones I have. \nThank you!",
-      "sort": 0
+      "sort": 1
     }
   ],
   "settings": {
