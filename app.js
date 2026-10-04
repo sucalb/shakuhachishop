@@ -8,6 +8,8 @@ const params = new URLSearchParams(location.search);
 // On the published site every Shakuhachi has its own static page (built by scripts/build.mjs).
 const PRERENDERED = !!document.querySelector('meta[name="prerendered"]');
 const fluteUrl = (f) => (PRERENDERED ? `shakuhachi-${f.id}.html` : `flute.html?id=${encodeURIComponent(f.id)}`);
+const categoryUrl = (id) => (!id ? "catalogue.html" : PRERENDERED ? `category-${id}.html` : `catalogue.html?c=${id}`);
+const lengthUrl = (l) => `${categoryUrl("jiari")}${PRERENDERED ? "?" : "&"}l=${l}`;
 const STATUS = { available: "Available", reserved: "On hold", sold: "Sold" };
 const pitchOf = (f) => (PITCH[f.length] ? ` · ${PITCH[f.length]}` : "");
 const lengthGroup = (id) => JIARI_LENGTHS.find((g) => g.id === id);
@@ -44,7 +46,7 @@ function renderChrome() {
     <a class="fb-mini" ${ext(S.contact.messenger)} aria-label="Message us on Facebook"><em>Message us</em>${FB_ICON}</a>
     <nav class="nav">
       <a href="catalogue.html">All Shakuhachi</a>
-      ${S.collections.map((c) => `<a href="catalogue.html?c=${c.id}">${esc(c.title)}</a>`).join("")}
+      ${S.collections.map((c) => `<a href="${categoryUrl(c.id)}">${esc(c.title)}</a>`).join("")}
       <a href="index.html#reviews">Reviews</a>
       <a ${ext(S.contact.facebook)}>Facebook</a>
     </nav>`;
@@ -111,18 +113,18 @@ function renderCollections() {
       ? `<img src="${safeImg(c.image)}" alt="${esc(c.title)}" loading="lazy">`
       : `<div class="ph-empty">Photos coming soon</div>`;
     const lengths = c.id === "jiari"
-      ? `<p class="len-links">${JIARI_LENGTHS.map((g) => `<a href="catalogue.html?c=jiari&l=${g.id}">${g.title.replace(" Shakuhachi", "")}</a>`).join("")}</p>`
+      ? `<p class="len-links">${JIARI_LENGTHS.map((g) => `<a href="${lengthUrl(g.id)}">${g.title.replace(" Shakuhachi", "")}</a>`).join("")}</p>`
       : "";
     return `
       <article class="coll-card reveal">
-        <a class="coll-img" href="catalogue.html?c=${c.id}">${img}</a>
+        <a class="coll-img" href="${categoryUrl(c.id)}">${img}</a>
         <div class="coll-body">
           <p class="kicker">${esc(c.kicker)}</p>
-          <h3><a href="catalogue.html?c=${c.id}">${esc(c.title)}</a></h3>
+          <h3><a href="${categoryUrl(c.id)}">${esc(c.title)}</a></h3>
           <p class="coll-text">${esc(c.text)}</p>
           <p class="count">${count ? `${count} ${c.id === "bamboo" ? "available" : "Shakuhachi available"}` : c.id === "bamboo" ? "New bamboo coming soon" : "New Shakuhachi coming soon"}</p>
           ${lengths}
-          <a class="btn" href="catalogue.html?c=${c.id}">${esc(c.cta)}</a>
+          <a class="btn" href="${categoryUrl(c.id)}">${esc(c.cta)}</a>
         </div>
       </article>`;
   }).join("");
@@ -228,13 +230,19 @@ function renderHome() {
 
 // ---------- Catalogue ----------
 function renderCatalogue() {
-  let current = params.get("c") || "";
+  const pageCollection = document.querySelector("main").dataset.collection || "";
+  // Old links (catalogue.html?c=edo) go to the static category page on the published site.
+  if (PRERENDERED && !pageCollection && params.get("c")) {
+    location.replace(categoryUrl(params.get("c")) + (params.get("l") ? `?l=${params.get("l")}` : ""));
+    return;
+  }
+  let current = pageCollection || params.get("c") || "";
   let length = params.get("l") || "";
   const tabs = [{ id: "", title: "All" }, ...S.collections];
 
   function sync() {
     const q = new URLSearchParams();
-    if (current) q.set("c", current);
+    if (current && !PRERENDERED) q.set("c", current);
     if (current === "jiari" && length) q.set("l", length);
     history.replaceState(null, "", q.toString() ? `?${q}` : location.pathname);
   }
@@ -245,15 +253,15 @@ function renderCatalogue() {
     $("#cat-kicker").textContent = c ? c.kicker : "Catalogue";
     $("#cat-title").textContent = g ? g.title : c ? c.title : "All Shakuhachi";
     $("#cat-text").textContent = c ? c.text : "Every Shakuhachi currently in the shop.";
-    document.title = `${g ? g.title : c ? c.title : "Catalogue"} – Old Shakuhachi Shop`;
+    document.title = g ? `${g.title} – ${SEO.SITE_NAME}` : c ? SEO.collectionTitle(c) : `All Shakuhachi for Sale – ${SEO.SITE_NAME}`;
 
     $("#tabs").innerHTML = tabs.map((t) =>
-      `<a href="?c=${t.id}" data-c="${t.id}" ${t.id === current ? 'aria-current="page"' : ""}>${esc(t.title)}</a>`).join("");
+      `<a href="${PRERENDERED ? categoryUrl(t.id) : `?c=${t.id}`}" data-c="${t.id}" ${t.id === current ? 'aria-current="page"' : ""}>${esc(t.title)}</a>`).join("");
 
     const sub = $("#subtabs");
     sub.hidden = current !== "jiari";
     sub.innerHTML = [{ id: "", title: "All lengths" }, ...JIARI_LENGTHS].map((x) =>
-      `<a href="?c=jiari&l=${x.id}" data-l="${x.id}" ${x.id === length ? 'aria-current="page"' : ""}>${esc(x.title.replace(" Shakuhachi", ""))}</a>`).join("");
+      `<a href="${PRERENDERED ? `?l=${x.id}` : `?c=jiari&l=${x.id}`}" data-l="${x.id}" ${x.id === length ? 'aria-current="page"' : ""}>${esc(x.title.replace(" Shakuhachi", ""))}</a>`).join("");
 
     const list = FLUTES.filter((f) =>
       (!current || f.collection === current) && (!g || g.match(parseFloat(f.length))));
@@ -264,7 +272,8 @@ function renderCatalogue() {
   }
 
   document.addEventListener("click", (e) => {
-    const a = e.target.closest("#tabs a, #subtabs a");
+    // On the published site the collection tabs are real pages; only the Jiari length filter stays in-page.
+    const a = e.target.closest(PRERENDERED ? "#subtabs a" : "#tabs a, #subtabs a");
     if (!a) return;
     e.preventDefault();
     if ("c" in a.dataset) { current = a.dataset.c; length = ""; }
@@ -284,7 +293,7 @@ function renderFlute() {
     return;
   }
   const c = S.collections.find((x) => x.id === f.collection);
-  document.title = `${f.name} – Old Shakuhachi Shop`;
+  document.title = SEO.fluteTitle(f);
   const imgs = (f.images || []).map(safeImg).filter(Boolean);
   const vid = youtubeId(f.youtube);
   const many = imgs.length > 1;
@@ -306,7 +315,7 @@ function renderFlute() {
       </section>
     </div>
     <div class="info">
-      <p class="kicker">${c ? `<a href="catalogue.html?c=${c.id}">${esc(c.title)}</a>` : ""}</p>
+      <p class="kicker">${c ? `<a href="${categoryUrl(c.id)}">${esc(c.title)}</a>` : ""}</p>
       <h1 class="title">${esc(f.name)}</h1>
       ${f.sample ? `<p class="sample-note">Sample listing, shown to illustrate the shop.</p>` : ""}
       <p class="price">${f.status === "sold" ? "Sold" : money(f.price)} <small>${f.status === "available" ? "plus shipping" : STATUS[f.status] || ""}</small></p>

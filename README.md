@@ -30,7 +30,22 @@ Khi `config.js` còn trống, web chạy **chế độ demo**: thay đổi trong
 - **Ảnh trang chủ**: tải ảnh lớn cho màn hình đầu, nhiều ảnh thì tự chuyển.
 - **Danh mục**: sửa chữ và ảnh đại diện của Edo / Jinashi / Jiari.
 - **Đánh giá**: tỉ lệ đề xuất, số đánh giá, chép các đánh giá hay từ Facebook.
-- **Liên hệ**: link trang Facebook, Messenger, trang đánh giá.
+- **Liên hệ**: link trang Facebook, Messenger, trang đánh giá, số điện thoại (tuỳ chọn).
+- **SEO**: tiêu đề và mô tả trang chủ trên Google. Mỗi cây sáo cũng có ô SEO riêng (có khung xem trước kết quả Google, đếm ký tự); để trống thì web tự tạo.
+- **Tài khoản**: khách tự đổi mật khẩu.
+
+## SEO
+
+Quy tắc tạo tiêu đề/mô tả nằm ở `SEO` trong `data.js`, dùng chung cho web, khung xem trước trong trang quản trị và `scripts/build.mjs`.
+Bản đăng lên có sẵn trong HTML (Google đọc được không cần JavaScript):
+
+| Trang | Tiêu đề / mô tả | Dữ liệu cấu trúc |
+|---|---|---|
+| `index.html` | Từ mục SEO trong quản trị | OnlineStore, WebSite |
+| `catalogue.html`, `category-<id>.html` | Tự tạo từ tên + mô tả danh mục | CollectionPage + ItemList, BreadcrumbList |
+| `shakuhachi-<id>.html` | Ô SEO của sản phẩm, hoặc tự tạo | Product + Offer, BreadcrumbList |
+
+`sitemap.xml` liệt kê tất cả (trừ sản phẩm mẫu, vốn có `noindex`). Link cũ `catalogue.html?c=…` tự chuyển sang `category-…html`.
 
 ## Tài khoản quản trị
 

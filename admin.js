@@ -90,6 +90,49 @@
     };
   }
 
+  // ---------- SEO: ô tiêu đề / mô tả + xem trước kết quả Google ----------
+  function seoPanel({ title, description, hint }) {
+    return `
+        <section class="panel seo-panel">
+          <h2>SEO – hiển thị trên Google</h2>
+          <p class="muted">${hint}</p>
+          <div class="serp" aria-label="Xem trước kết quả Google">
+            <div class="serp-site"><img src="assets/favicon-48.png" alt=""><div><b>shakuhachishop.com</b><span class="serp-url"></span></div></div>
+            <div class="serp-title"></div>
+            <div class="serp-desc"></div>
+          </div>
+          <label><span class="lbl-row">Tiêu đề trên Google <span class="count-chip" data-for="seoTitle"></span></span>
+            <input name="seoTitle" value="${esc(title)}" maxlength="120">
+          </label>
+          <label><span class="lbl-row">Mô tả trên Google <span class="count-chip" data-for="seoDescription"></span></span>
+            <textarea name="seoDescription" rows="3" maxlength="320">${esc(description)}</textarea>
+          </label>
+        </section>`;
+  }
+  // auto() returns { title, description, url } computed from the rest of the form.
+  function wireSeo(form, auto) {
+    const panel = form.querySelector(".seo-panel");
+    const t = form.elements.seoTitle, d = form.elements.seoDescription;
+    const chip = (name, len, max) => {
+      const el = panel.querySelector(`[data-for="${name}"]`);
+      el.textContent = `${len}/${max}`;
+      el.className = "count-chip " + (len === 0 ? "" : len > max ? "bad" : len < max * 0.4 ? "warn" : "ok");
+    };
+    const update = () => {
+      const a = auto();
+      t.placeholder = a.title;
+      d.placeholder = a.description;
+      const title = t.value.trim() || a.title, desc = d.value.trim() || a.description;
+      panel.querySelector(".serp-url").textContent = a.url;
+      panel.querySelector(".serp-title").textContent = title.length > SEO.TITLE_MAX ? SEO.clamp(title, SEO.TITLE_MAX) : title;
+      panel.querySelector(".serp-desc").textContent = desc.length > SEO.DESC_MAX ? SEO.clamp(desc, SEO.DESC_MAX) : desc;
+      chip("seoTitle", title.length, SEO.TITLE_MAX);
+      chip("seoDescription", desc.length, SEO.DESC_MAX);
+    };
+    form.addEventListener("input", update);
+    update();
+  }
+
   // ---------- Đăng nhập ----------
   function renderLogin() {
     tabsEl.hidden = true;
@@ -123,7 +166,7 @@
     state.dirty = false;
     state.tab = tab;
     tabsEl.querySelectorAll("button").forEach((b) => b.toggleAttribute("aria-current", b.dataset.tab === tab));
-    ({ flutes: renderFluteList, hero: renderHero, collections: renderCollections, reviews: renderReviews, contact: renderContact, account: renderAccount })[tab]();
+    ({ flutes: renderFluteList, hero: renderHero, collections: renderCollections, reviews: renderReviews, contact: renderContact, seo: renderSeo, account: renderAccount })[tab]();
     window.scrollTo(0, 0);
   }
   tabsEl.addEventListener("click", (e) => {
@@ -281,6 +324,7 @@
             <textarea name="description" rows="7" placeholder="Tình trạng, âm thanh, đã sửa gì, giá đã gồm ship chưa…">${esc(d.description)}</textarea>
           </label>
         </section>
+        ${seoPanel({ title: d.seoTitle || "", description: d.seoDescription || "", hint: "Để trống thì web tự lấy tên sáo làm tiêu đề và đoạn đầu mô tả làm mô tả (chữ mờ trong ô). Chỉ điền khi muốn viết riêng cho Google, bằng tiếng Anh, có từ khoá người mua hay tìm như “1.8 shakuhachi”, “jinashi”, “antique”." })}
       </form>`;
 
     const form = document.getElementById("editor");
@@ -304,6 +348,14 @@
       state.dirty = false;
       renderFluteList();
     };
+    wireSeo(form, () => {
+      const draft = { name: form.elements.name.value.trim() || "Tên sáo", description: form.elements.description.value };
+      return {
+        title: SEO.fluteTitle(draft),
+        description: SEO.fluteDescription(draft),
+        url: ` › shakuhachi-${d.id || slugify(draft.name) || "…"}.html`,
+      };
+    });
     form.addEventListener("submit", (e) => { e.preventDefault(); saveFlute(form); });
     window.scrollTo(0, 0);
   }
@@ -321,6 +373,8 @@
       status: v("status"),
       youtube: v("youtube"),
       description: form.elements.description.value.trim(),
+      seoTitle: form.elements.seoTitle.value.trim(),
+      seoDescription: form.elements.seoDescription.value.trim(),
       images: data.images,
     };
     if (!flute.name) return toast("Vui lòng nhập tên sáo.", true), form.elements.name.focus();
@@ -548,6 +602,26 @@
       if (value.phone && value.phone.replace(/\D/g, "").length < 8) return toast("Số điện thoại chưa đúng.", true);
       saveSetting("contact", value, e.target);
     };
+  }
+
+  // ---------- SEO trang chủ ----------
+  function renderSeo() {
+    const seo = (state.settings.seo || {});
+    app.innerHTML = `
+      <div class="page-head"><div>
+        <h1>SEO trang chủ</h1>
+        <p class="muted">Tiêu đề và mô tả hiện trên Google khi người ta tìm tên shop hoặc “shakuhachi for sale”. Trang sản phẩm có ô SEO riêng trong màn hình sửa sáo; trang danh mục tự tạo từ tên và mô tả của danh mục.</p>
+      </div></div>
+      <form id="seoForm">
+        ${seoPanel({ title: seo.homeTitle || "", description: seo.homeDescription || "", hint: "Để trống thì dùng tiêu đề và mô tả mặc định (chữ mờ trong ô). Google sẽ cập nhật sau khi đọc lại trang, thường vài ngày." })}
+      </form>
+      ${saveBar("saveSeo")}`;
+    const form = document.getElementById("seoForm");
+    wireSeo(form, () => ({ title: SEO.homeTitle({}), description: SEO.homeDescription({}), url: "" }));
+    document.getElementById("saveSeo").onclick = (e) => saveSetting("seo", {
+      homeTitle: form.elements.seoTitle.value.trim(),
+      homeDescription: form.elements.seoDescription.value.trim(),
+    }, e.target);
   }
 
   // ---------- Tài khoản ----------

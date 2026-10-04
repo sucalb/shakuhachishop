@@ -165,3 +165,42 @@ const PITCH = {
   "1.3": "G", "1.4": "F#", "1.5": "F", "1.6": "E", "1.7": "D#", "1.8": "D",
   "1.9": "C#", "2.0": "C", "2.1": "B", "2.4": "A",
 };
+
+// Search-engine titles and descriptions. Shared by app.js, admin.js (Google preview) and
+// scripts/build.mjs (static pages), so what the owner previews is what gets published.
+// Custom values entered in admin (seoTitle / seoDescription) win; otherwise these defaults apply.
+const SEO = {
+  SITE_NAME: "Old Shakuhachi Shop",
+  TITLE_MAX: 60,
+  DESC_MAX: 155,
+  // Shorten at a word boundary so Google never shows a word cut in half.
+  clamp(text, max = 155) {
+    const t = String(text || "").replace(/\s+/g, " ").trim();
+    if (t.length <= max) return t;
+    const cut = t.slice(0, max - 1);
+    return cut.slice(0, Math.max(cut.lastIndexOf(" "), max * 0.6)).replace(/[\s,.;:–-]+$/, "") + "…";
+  },
+  fluteTitle(f) {
+    return (f.seoTitle || "").trim() || `${f.name} – ${SEO.SITE_NAME}`;
+  },
+  fluteDescription(f) {
+    if ((f.seoDescription || "").trim()) return f.seoDescription.trim();
+    const text = String(f.description || "").replace(/\n+/g, " ").trim();
+    return SEO.clamp(text || `${f.name} for sale at ${SEO.SITE_NAME}. Photos and video of the instrument; message us to buy.`);
+  },
+  collectionTitle(c) {
+    return (c.seoTitle || "").trim() || `${c.title} for Sale – ${SEO.SITE_NAME}`;
+  },
+  collectionDescription(c, count) {
+    if ((c.seoDescription || "").trim()) return c.seoDescription.trim();
+    const n = count ? ` ${count} available now, each with photos and video.` : "";
+    return SEO.clamp(`${c.text}${n}`);
+  },
+  homeTitle(s) {
+    return ((s && s.seo && s.seo.homeTitle) || "").trim() || `${SEO.SITE_NAME} – Shakuhachi for Sale`;
+  },
+  homeDescription(s) {
+    return ((s && s.seo && s.seo.homeDescription) || "").trim() ||
+      "Old and used Shakuhachi for sale: Edo Shakuhachi, jinashi, jiari, wood and Yuu Shakuhachi, and bamboo for making. Each shown with photos and video.";
+  },
+};
