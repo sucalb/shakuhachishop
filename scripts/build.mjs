@@ -43,6 +43,7 @@ const fluteFile = (f) => `shakuhachi-${f.id}.html`;
 const categoryFile = (c) => `category-${c.id}.html`;
 const inCollection = (c) => flutes.filter((f) => f.collection === c.id);
 const forSale = (list) => list.filter((f) => f.status !== "sold").length;
+const realForSale = (list) => forSale(list.filter((f) => !f.sample)); // counts shown to Google leave samples out
 
 // ---- Copy the site.
 fs.rmSync(OUT, { recursive: true, force: true });
@@ -165,8 +166,8 @@ function catalogueHtml(c) {
   const file = c ? categoryFile(c) : "catalogue.html";
   const url = `${SITE}/${file}`;
   const title = c ? SEO.collectionTitle(c) : `All Shakuhachi for Sale – ${SEO.SITE_NAME}`;
-  const description = c ? SEO.collectionDescription(c, forSale(list))
-    : SEO.clamp(`Every Shakuhachi in the shop: Edo, jinashi, jiari, wood and Yuu, and bamboo for making. ${forSale(list)} available now, each with photos and video.`);
+  const description = c ? SEO.collectionDescription(c, realForSale(list))
+    : SEO.clamp(`Every Shakuhachi in the shop: Edo, jinashi, jiari, wood and Yuu, and bamboo for making. ${realForSale(list)} available now, each with photos and video.`);
   const page = {
     "@context": "https://schema.org",
     "@type": "CollectionPage",
