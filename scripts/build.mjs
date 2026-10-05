@@ -221,6 +221,7 @@ const website = {
   url: `${SITE}/`,
   publisher: { "@id": `${SITE}/#store` },
 };
+const heroFirst = (settings.hero || []).find((h) => safeImg(h.src));
 const collectionCards = collections.map((c) => {
   const count = forSale(inCollection(c));
   const img = safeImg(c.image) ? `<img src="${esc(c.image)}" alt="${esc(c.title)}" loading="lazy">` : `<div class="ph-empty">Photos coming soon</div>`;
@@ -242,7 +243,12 @@ const collectionCards = collections.map((c) => {
 write("index.html", withHead(read("index.html"), {
   title: SEO.homeTitle(settings), description: SEO.homeDescription(settings), url: `${SITE}/`, ld: [store, website],
 })
-  .replace('<div id="collections" class="coll-grid wrap"></div>', `<div id="collections" class="coll-grid wrap">${collectionCards}</div>`));
+  .replace('<div id="collections" class="coll-grid wrap"></div>', `<div id="collections" class="coll-grid wrap">${collectionCards}</div>`)
+  // The first hero photo is the largest thing on screen: ship it in the HTML and fetch it first.
+  .replace('<div class="slides" id="slides"></div>', heroFirst
+    ? `<div class="slides" id="slides"><img src="${esc(heroFirst.src)}" alt="" style="object-position:${esc(heroFirst.focus || "50% 50%")}" class="on" fetchpriority="high"></div>`
+    : '<div class="slides" id="slides"></div>')
+  .replace(`${MARK}\n`, heroFirst ? `${MARK}\n  <link rel="preload" as="image" href="${esc(heroFirst.src)}" fetchpriority="high">\n` : `${MARK}\n`));
 
 // ---- Sitemap (samples are left out; they are only decoration).
 const today = new Date().toISOString().slice(0, 10);

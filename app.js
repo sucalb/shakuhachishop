@@ -42,7 +42,7 @@ function renderChrome() {
   const header = $("[data-header]");
   header.innerHTML = `
     <button class="burger" aria-label="Menu" aria-expanded="false"><i></i><em>Menu</em></button>
-    <a class="brand" href="index.html"><img class="brand-logo" src="assets/favicon-192.png" alt="" width="34" height="34"><b>Old Shakuhachi Shop</b></a>
+    <a class="brand" href="index.html"><img class="brand-logo" src="assets/logo-128.jpg" alt="" width="34" height="34"><b>Old Shakuhachi Shop</b></a>
     <a class="fb-mini" ${ext(S.contact.messenger)} aria-label="Message us on Facebook"><em>Message us</em>${FB_ICON}</a>
     <nav class="nav">
       <a href="catalogue.html">All Shakuhachi</a>
@@ -66,7 +66,7 @@ function renderChrome() {
       <a class="btn" ${ext(S.contact.messenger)}>${FB_ICON} Message us on Facebook</a>
       ${phoneLink("foot-phone")}
       <div class="foot-bottom">
-        <span class="brand-mini"><img class="brand-logo" src="assets/favicon-192.png" alt="" width="26" height="26"> Old Shakuhachi Shop</span>
+        <span class="brand-mini"><img class="brand-logo" src="assets/logo-128.jpg" alt="" width="26" height="26"> Old Shakuhachi Shop</span>
         <nav class="foot-links">
           <a href="catalogue.html">Catalogue</a>
           <a ${ext(S.contact.facebook)}>Facebook page</a>
@@ -94,15 +94,23 @@ function card(f) {
 function renderHero() {
   const box = $("#slides");
   const imgs = S.hero.filter((h) => safeImg(h.src));
+  const first = box.querySelector("img");
+  // The built page already carries the first photo (fetched with high priority); keep it if it matches.
+  const keepFirst = first && imgs[0] && first.getAttribute("src") === imgs[0].src;
   box.innerHTML = imgs.map((h, i) =>
-    `<img src="${safeImg(h.src)}" alt="" style="object-position:${esc(h.focus || "50% 50%")}" class="${i ? "" : "on"}">`).join("");
+    `<img ${i ? "data-src" : "src"}="${safeImg(h.src)}" alt="" style="object-position:${esc(h.focus || "50% 50%")}" class="${i ? "" : "on"}"${i ? "" : ' fetchpriority="high"'}>`).join("");
+  if (keepFirst) box.replaceChild(first, box.firstElementChild);
   if (imgs.length < 2 || matchMedia("(prefers-reduced-motion: reduce)").matches) return;
   const slides = box.querySelectorAll("img");
+  const load = (img) => { if (img && img.dataset.src) { img.src = img.dataset.src; delete img.dataset.src; } };
+  setTimeout(() => load(slides[1]), 3000);
   let i = 0;
   setInterval(() => {
     slides[i].classList.remove("on");
     i = (i + 1) % slides.length;
+    load(slides[i]);
     slides[i].classList.add("on");
+    load(slides[(i + 1) % slides.length]);
   }, 6000);
 }
 
@@ -135,7 +143,7 @@ function renderScale() {
   const max = parseFloat(lengths[lengths.length - 1]);
   $("#scale").innerHTML = lengths.map((l) => `
     <li class="${l === "1.8" ? "std" : ""}">
-      <img src="assets/flute-scale.png" alt="" style="--h:${(parseFloat(l) / max).toFixed(3)}">
+      <img src="assets/flute-scale.jpg" alt="" loading="lazy" style="--h:${(parseFloat(l) / max).toFixed(3)}">
       <b>${l}</b><small>${PITCH[l]}</small>
     </li>`).join("");
 }

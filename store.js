@@ -195,8 +195,8 @@ const Store = (() => {
       const canvas = await resize(file, 1200);
       return canvas.toDataURL("image/jpeg", 0.7);
     }
-    const canvas = await resize(file, 1800);
-    const blob = await new Promise((r) => canvas.toBlob(r, "image/jpeg", 0.82));
+    const canvas = await resize(file, 1600);
+    const blob = await new Promise((r) => canvas.toBlob(r, "image/jpeg", 0.8));
     const path = `uploads/${new Date().toISOString().slice(0, 10)}-${Math.random().toString(36).slice(2, 8)}.jpg`;
     const content = toB64(new Uint8Array(await blob.arrayBuffer()));
     await api(`contents/${path}`, { method: "PUT", body: JSON.stringify({ message: `Tải ảnh ${file.name}`, content, branch: BRANCH }) });

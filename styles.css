@@ -68,6 +68,7 @@ h1, h2, h3, p, blockquote, figure { margin: 0; }
   background: rgba(243, 237, 226, .92); backdrop-filter: blur(10px);
   border-bottom: 1px solid var(--line);
 }
+.top:empty { height: 59px; }
 .brand { grid-column: 2; display: flex; align-items: center; gap: 12px; text-decoration: none; }
 .brand-logo { border-radius: 50%; display: block; }
 .brand b { font: 500 25px var(--caps); letter-spacing: .05em; }
