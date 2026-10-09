@@ -250,6 +250,47 @@ write("index.html", withHead(read("index.html"), {
     : '<div class="slides" id="slides"></div>')
   .replace(`${MARK}\n`, heroFirst ? `${MARK}\n  <link rel="preload" as="image" href="${esc(heroFirst.src)}" fetchpriority="high">\n` : `${MARK}\n`));
 
+// ---- Old WordPress addresses still in Google: send them to the matching new page.
+// GitHub Pages has no server redirects, so each one is a tiny page with an instant refresh
+// (Google treats a 0-second refresh as a permanent redirect) plus a canonical link.
+const OLD_URLS = {
+  "shop": "catalogue.html",
+  "shop/1-9-seien-shakuhachi": "shakuhachi-seien-19.html",
+  "product-category/1-3-shakuhachi": "category-jiari.html",
+  "product-category/1-4-shakuhachi": "category-jiari.html",
+  "product-category/1-5-shakuhachi": "category-jiari.html",
+  "product-category/1-9-shakuhachi": "category-jiari.html",
+};
+for (const [from, to] of Object.entries(OLD_URLS)) {
+  if (!fs.existsSync(path.join(OUT, to))) continue;
+  const depth = "../".repeat(from.split("/").length);
+  fs.mkdirSync(path.join(OUT, from), { recursive: true });
+  fs.writeFileSync(path.join(OUT, from, "index.html"), `<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<title>Moved – ${SEO.SITE_NAME}</title>
+<link rel="canonical" href="${SITE}/${to}">
+<meta http-equiv="refresh" content="0; url=${depth}${to}">
+</head><body><p>This page has moved to <a href="${depth}${to}">${SITE}/${to}</a>.</p>
+<script>location.replace(${JSON.stringify(depth + to)} + location.hash);</script></body></html>
+`);
+}
+
+// ---- 404 page: anything else that no longer exists (old cart, checkout, demo products…).
+write("404.html", withHead(catalogueTemplate, {
+  title: `Page not found – ${SEO.SITE_NAME}`,
+  description: "This page does not exist. Browse every Shakuhachi in the shop instead.",
+  url: `${SITE}/catalogue.html`, noindex: true,
+})
+  // 404 pages are served at any depth (/shop/polo/…), so resolve every relative link from the root.
+  .replace('<meta charset="utf-8">', '<meta charset="utf-8">\n  <base href="/">')
+  .replace('<p class="kicker" id="cat-kicker">Catalogue</p>', '<p class="kicker" id="cat-kicker">Page not found</p>')
+  .replace('<h1 class="title" id="cat-title">All Shakuhachi</h1>', '<h1 class="title" id="cat-title">This page has moved</h1>')
+  .replace('<p class="sub" id="cat-text"></p>', '<p class="sub" id="cat-text">The shop has a new website. Every Shakuhachi currently for sale is listed below.</p>')
+  .replace('<div class="grid" id="grid"><p class="loading">Loading…</p></div>', `<div class="grid" id="grid">${flutes.filter((f) => !f.sample).map(card).join("").replace(/href="shakuhachi-/g, 'href="/shakuhachi-').replace(/src="(assets|uploads)\//g, 'src="/$1/')}</div>`)
+  .replace('<nav class="tabs" id="tabs" aria-label="Collections"></nav>', `<nav class="tabs" id="tabs" aria-label="Collections"><a href="catalogue.html">All</a>${collections.map((x) => `<a href="${categoryFile(x)}">${esc(x.title)}</a>`).join("")}</nav>`)
+  // Keep app.js from re-rendering this page as a catalogue.
+  .replace(/(\s*)(<script src="app\.js)/, '$1<script>window.NOT_FOUND = true;</script>$1$2'));
+
 // ---- Sitemap (samples are left out; they are only decoration).
 const today = new Date().toISOString().slice(0, 10);
 const urls = [

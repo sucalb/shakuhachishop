@@ -423,7 +423,7 @@ function observeReveals() {
   }
   renderChrome();
   if ($("#collections")) renderHome();
-  if ($("#grid")) renderCatalogue();
+  if ($("#grid") && !window.NOT_FOUND) renderCatalogue();
   if ($("#flute")) renderFlute();
   observeReveals();
 })();
