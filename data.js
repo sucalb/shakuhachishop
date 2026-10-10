@@ -41,6 +41,14 @@ const DEFAULTS = {
       image: "assets/seien.jpg",
     },
     {
+      id: "other",
+      kicker: "Other Japanese flutes",
+      title: "Hitoyogiri, Shinobue and other kinds of flutes",
+      text: "Hitoyogiri, the short one-node ancestor of the Shakuhachi, Shinobue transverse flutes and other traditional bamboo flutes.",
+      cta: "See other flutes",
+      image: "",
+    },
+    {
       id: "wood",
       kicker: "Wood & resin",
       title: "Wood and Yuu Shakuhachi",

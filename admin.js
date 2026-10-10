@@ -3,7 +3,7 @@
   const tabsEl = document.getElementById("tabs");
   const state = { tab: "flutes", flutes: [], settings: null, filter: "", editing: null, dirty: false };
 
-  const COLLECTION_NAMES = { edo: "Edo Shakuhachi", jinashi: "Jinashi Shakuhachi", jiari: "Jiari Shakuhachi", wood: "Wood and Yuu Shakuhachi", bamboo: "Bamboo for Shakuhachi making" };
+  const COLLECTION_NAMES = { edo: "Edo Shakuhachi", jinashi: "Jinashi Shakuhachi", jiari: "Jiari Shakuhachi", other: "Hitoyogiri, Shinobue and other kinds of flutes", wood: "Wood and Yuu Shakuhachi", bamboo: "Bamboo for Shakuhachi making" };
   const STATUS_VI = { available: "Còn hàng", reserved: "Đang giữ", sold: "Đã bán" };
   const STATUS_NEXT = { available: "reserved", reserved: "sold", sold: "available" };
   const FOCUS = [["50% 50%", "Giữa"], ["50% 20%", "Phía trên"], ["50% 80%", "Phía dưới"]];

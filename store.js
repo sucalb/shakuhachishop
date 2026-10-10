@@ -153,14 +153,20 @@ const Store = (() => {
 
   // ---------- Cài đặt trang (ảnh trang chủ, danh mục, đánh giá, liên hệ) ----------
   // Mục nào chưa lưu thì dùng giá trị mặc định trong data.js.
+  // Saved lists predate new categories: insert missing ones at their default position.
+  const mergeCollections = (saved, defaults) => {
+    const byId = new Map(saved.map((c) => [c.id, c]));
+    const out = [];
+    defaults.forEach((d) => out.push(byId.get(d.id) || d));
+    saved.forEach((c) => { if (!defaults.some((d) => d.id === c.id)) out.push(c); });
+    return out;
+  };
+
   async function settings() {
     const saved = live ? (await readDoc()).settings || {} : demoRead(DEMO_SETTINGS, {});
     const merged = { ...clone(DEFAULTS), ...clone(saved) };
     // Danh mục mới thêm vào data.js vẫn hiện dù danh sách đã lưu từ trước.
-    if (saved.collections) {
-      const have = new Set(saved.collections.map((c) => c.id));
-      merged.collections = [...merged.collections, ...clone(DEFAULTS.collections).filter((c) => !have.has(c.id))];
-    }
+    if (saved.collections) merged.collections = mergeCollections(clone(saved.collections), clone(DEFAULTS.collections));
     return merged;
   }
 

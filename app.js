@@ -130,7 +130,7 @@ function renderCollections() {
           <p class="kicker">${esc(c.kicker)}</p>
           <h3><a href="${categoryUrl(c.id)}">${esc(c.title)}</a></h3>
           <p class="coll-text">${esc(c.text)}</p>
-          <p class="count">${count ? `${count} ${c.id === "bamboo" ? "available" : "Shakuhachi available"}` : c.id === "bamboo" ? "New bamboo coming soon" : "New Shakuhachi coming soon"}</p>
+          <p class="count">${count ? `${count} ${c.id === "bamboo" || c.id === "other" ? "available" : "Shakuhachi available"}` : c.id === "bamboo" ? "New bamboo coming soon" : c.id === "other" ? "New flutes coming soon" : "New Shakuhachi coming soon"}</p>
           ${lengths}
           <a class="btn" href="${categoryUrl(c.id)}">${esc(c.cta)}</a>
         </div>

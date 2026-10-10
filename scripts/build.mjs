@@ -35,8 +35,11 @@ const flutes = (content.flutes || SEED_FLUTES)
   .filter((f) => /^[a-z0-9-]+$/.test(f.id || ""))
   .sort((a, b) => (a.sort ?? 9999) - (b.sort ?? 9999));
 const settings = { ...DEFAULTS, ...(content.settings || {}) };
-const savedIds = new Set((settings.collections || []).map((c) => c.id));
-const collections = [...settings.collections, ...DEFAULTS.collections.filter((c) => !savedIds.has(c.id))];
+// Saved lists predate new categories: insert missing ones at their default position.
+const collections = ((saved, defaults) => {
+  const byId = new Map(saved.map((c) => [c.id, c]));
+  return [...defaults.map((d) => byId.get(d.id) || d), ...saved.filter((c) => !defaults.some((d) => d.id === c.id))];
+})(settings.collections || [], DEFAULTS.collections);
 const contact = { ...DEFAULTS.contact, ...(settings.contact || {}) };
 
 const fluteFile = (f) => `shakuhachi-${f.id}.html`;
@@ -234,7 +237,7 @@ const collectionCards = collections.map((c) => {
           <p class="kicker">${esc(c.kicker)}</p>
           <h3><a href="${categoryFile(c)}">${esc(c.title)}</a></h3>
           <p class="coll-text">${esc(c.text)}</p>
-          <p class="count">${count ? `${count} ${c.id === "bamboo" ? "available" : "Shakuhachi available"}` : c.id === "bamboo" ? "New bamboo coming soon" : "New Shakuhachi coming soon"}</p>
+          <p class="count">${count ? `${count} ${c.id === "bamboo" || c.id === "other" ? "available" : "Shakuhachi available"}` : c.id === "bamboo" ? "New bamboo coming soon" : c.id === "other" ? "New flutes coming soon" : "New Shakuhachi coming soon"}</p>
           ${lengths}
           <a class="btn" href="${categoryFile(c)}">${esc(c.cta)}</a>
         </div>
